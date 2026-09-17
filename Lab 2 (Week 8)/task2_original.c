@@ -82,8 +82,7 @@ int main(int argc, char **argv) {
 
     MPI_Barrier(MPI_COMM_WORLD);
     double t_start = MPI_Wtime();
-    double t_search_start = MPI_Wtime();
-    
+
     /* --- how many chunks belong to this process? --- */
     long my_chunks = 0;
     for (long c = rank; c < num_chunks; c += size) my_chunks++;
@@ -122,13 +121,6 @@ int main(int argc, char **argv) {
         }
     }
 
-    double t_search_end = MPI_Wtime();
-    double local_search_time = t_search_end - t_search_start;
-    double max_search_time = 0.0;
-
-    MPI_Reduce(&local_search_time, &max_search_time, 1,
-               MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-
     /* --- concatenate this process's thread lists --- */
     long local_count = 0;
     for (int t = 0; t < threads; t++) local_count += lists[t].count;
@@ -146,8 +138,6 @@ int main(int argc, char **argv) {
     long *all_primes = NULL;
     int total_count = 0;
 
-    double t_comm_start = MPI_Wtime();
-
     if (rank == 0) counts = malloc(size * sizeof(int));
     MPI_Gather(&local_count_int, 1, MPI_INT, counts, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -161,17 +151,8 @@ int main(int argc, char **argv) {
     MPI_Gatherv(local_primes, local_count_int, MPI_LONG,
                 all_primes, counts, displs, MPI_LONG, 0, MPI_COMM_WORLD);
 
-    double t_comm_end = MPI_Wtime();
-    double local_comm_time = t_comm_end - t_comm_start;
-    double max_comm_time = 0.0;
-
-    MPI_Reduce(&local_comm_time, &max_comm_time, 1,
-               MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-
     /* --- root sorts and writes; chunks were interleaved so order is scrambled --- */
     if (rank == 0) {
-        double t_post_start = MPI_Wtime();
-
         qsort(all_primes, total_count, sizeof(long), compare_long);
 
         FILE *fp = fopen("primes_output.txt", "w");
@@ -182,19 +163,11 @@ int main(int argc, char **argv) {
             fclose(fp);
         }
 
-        double t_post_end = MPI_Wtime();
-        double post_time = t_post_end - t_post_start;
-
         double t_end = MPI_Wtime();
         printf("n=%ld, processes=%d, threads=%d, total workers=%d, "
-            "primes found=%d, total=%f seconds, search=%f seconds, "
-            "communication=%f seconds, post=%f seconds\n",
-            n, size, threads, size * threads, total_count,
-            t_end - t_start,
-            max_search_time,
-            max_comm_time,
-            post_time);
-            
+               "primes found=%d, time=%f seconds\n",
+               n, size, threads, size * threads, total_count, t_end - t_start);
+
         free(all_primes); free(counts); free(displs);
     }
 

@@ -55,8 +55,7 @@ int main(int argc, char **argv) {
 
     // all processes wait here so the timer starts at the same moment for everyone
     MPI_Barrier(MPI_COMM_WORLD);
-    double t_start = MPI_Wtime();
-    double t_search_start = MPI_Wtime();  // useful for Task 3 timing
+    double t_start = MPI_Wtime();   // useful for Task 3 timing
 
     // --- chunked round-robin workload distribution ---
     int num_chunks = size * CHUNKS_PER_PROCESS;
@@ -83,21 +82,12 @@ int main(int argc, char **argv) {
         }
     }
 
-    double t_search_end = MPI_Wtime();
-    double local_search_time = t_search_end - t_search_start;
-    double max_search_time = 0.0;
-
-    MPI_Reduce(&local_search_time, &max_search_time, 1,
-               MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-
     // --- gather variable-length results to root ---
     int local_count_int = (int)local_count;
     int *counts = NULL;
     int *displs = NULL;
     long *all_primes = NULL;
     int total_count = 0;
-
-    double t_comm_start = MPI_Wtime();
 
     if (rank == 0) {
         counts = malloc(size * sizeof(int));
@@ -115,44 +105,28 @@ int main(int argc, char **argv) {
     }
 
     MPI_Gatherv(local_primes, local_count_int, MPI_LONG,
-            all_primes, counts, displs, MPI_LONG, 0, MPI_COMM_WORLD);
-
-    double t_comm_end = MPI_Wtime();
-    double local_comm_time = t_comm_end - t_comm_start;
-    double max_comm_time = 0.0;
-
-    MPI_Reduce(&local_comm_time, &max_comm_time, 1,
-        MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+                all_primes, counts, displs, MPI_LONG, 0, MPI_COMM_WORLD);
 
     // --- root sorts (chunked interleaving means gathered order isn't sorted) and writes output ---
     if (rank == 0) {
-        double t_post_start = MPI_Wtime();
-
         qsort(all_primes, total_count, sizeof(long), compare_long);
 
         FILE *fp = fopen("primes_output.txt", "w");
         if (fp == NULL) {
             fprintf(stderr, "Error: could not open output file\n");
         } else {
-            for (int i = 0; i < total_count; i++)
+            for (int i = 0; i < total_count; i++) {
                 fprintf(fp, "%ld\n", all_primes[i]);
+            }
             fclose(fp);
         }
-
-        double t_post_end = MPI_Wtime();
-        double post_time = t_post_end - t_post_start;
 
         // timer stops here so the sort and the file write are included
         double t_end = MPI_Wtime();
 
-        printf("n=%ld, processes=%d, primes found=%d, total=%f seconds, "
-            "search=%f seconds, communication=%f seconds, post=%f seconds\n",
-            n, size, total_count,
-            t_end - t_start,
-            max_search_time,
-            max_comm_time,
-            post_time);
-            
+        printf("n=%ld, processes=%d, primes found=%d, time=%f seconds\n",
+               n, size, total_count, t_end - t_start);
+
         free(all_primes);
         free(counts);
         free(displs);
