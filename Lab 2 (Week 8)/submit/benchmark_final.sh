@@ -13,6 +13,18 @@
 #   - If restarted, completed runs are skipped.
 #
 # Each configuration is run 3 times.
+#
+# ============================================================
+#
+#                               **AI Declaration**
+# ChatGPT was used to assist with the development of the Task 3 benchmarking script. 
+# ChatGPT was used to suggest and generate parts of this Bash script, including 
+# the structure for running the serial, MPI, and hybrid MPI/OpenMP benchmarks, 
+# checking whether runs had already been completed, and recording timing results 
+# in a CSV file. I reviewed, tested, debugged, and modified the generated code 
+# to suit the assignment. I am responsible for the final code, experimental setup, 
+# and interpretation of the results.
+
 # ============================================================
 
 OUTPUT="final_results.csv"
