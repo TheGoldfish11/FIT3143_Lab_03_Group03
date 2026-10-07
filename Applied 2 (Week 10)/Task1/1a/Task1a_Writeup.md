@@ -8,7 +8,7 @@ bus**, and the rotated result must be copied back. These copies are done by the 
 engines** and are the slowest link in the chain. For a light, **memory-bound** kernel like rotation, they
 take more time than the computation.
 
-*Diagram: `diagram_1a_transfer_path.png`*
+*Diagram: `diagram_1a_transfer_path.png` (simplified: copy in over PCIe → rotate in GDDR → copy back)*
 
 ## 2. Hardware involved
 
@@ -24,7 +24,6 @@ take more time than the computation.
 
 ## 3. The transfer, step by step
 
-Numbers match the diagram.
 
 **Pageable host memory** (`malloc`/`new`, the default case):
 

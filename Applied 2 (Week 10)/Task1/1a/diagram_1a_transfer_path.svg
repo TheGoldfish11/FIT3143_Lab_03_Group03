@@ -1,117 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" font-family="Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="580" viewBox="0 0 1200 580" font-family="Helvetica, Arial, sans-serif">
   <defs>
-    <marker id="aBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,6 L0,12 z" fill="#1f5fbf"/></marker>
-    <marker id="aOrange" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,6 L0,12 z" fill="#d9730d"/></marker>
-    <marker id="aRed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,6 L0,12 z" fill="#c62828"/></marker>
-    <marker id="aGreen" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,6 L0,12 z" fill="#2e7d32"/></marker>
+    <marker id="aBlue" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#1f5fbf"/></marker>
+    <marker id="aOrange" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#d9730d"/></marker>
+    <marker id="aGreen" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#2e7d32"/></marker>
   </defs>
-  <rect width="1280" height="760" fill="#ffffff"/>
+  <rect width="1200" height="580" fill="#ffffff"/>
 
-  <text x="640" y="38" text-anchor="middle" font-size="26" font-weight="bold" fill="#222">Moving an image between host memory (DDR5) and GPU memory (GDDR)</text>
+  <text x="600" y="44" text-anchor="middle" font-size="28" font-weight="bold" fill="#222">Moving the image to the GPU and back</text>
 
   <!-- HOST -->
-  <rect x="30" y="64" width="460" height="560" rx="14" fill="#eef4ff" stroke="#1f5fbf" stroke-width="2"/>
-  <text x="50" y="94" font-size="20" font-weight="bold" fill="#1f5fbf">HOST (CPU side)</text>
+  <rect x="40" y="80" width="380" height="370" rx="14" fill="#eef4ff" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="230" y="112" text-anchor="middle" font-size="21" font-weight="bold" fill="#1f5fbf">Computer (host)</text>
+  <rect x="80" y="130" width="300" height="70" rx="8" fill="#fff" stroke="#555"/>
+  <text x="230" y="173" text-anchor="middle" font-size="20" font-weight="bold">CPU</text>
+  <rect x="80" y="230" width="300" height="196" rx="10" fill="#dbe7fb" stroke="#1f5fbf"/>
+  <text x="230" y="258" text-anchor="middle" font-size="18" font-weight="bold">System RAM (DDR5)</text>
+  <text x="230" y="280" text-anchor="middle" font-size="15">≈ 77 GB/s</text>
+  <rect x="110" y="296" width="240" height="44" rx="6" fill="#fff" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="230" y="324" text-anchor="middle" font-size="16">image</text>
+  <rect x="110" y="364" width="240" height="44" rx="6" fill="#fff" stroke="#d9730d" stroke-width="2"/>
+  <text x="230" y="392" text-anchor="middle" font-size="16">rotated image</text>
 
-  <rect x="56" y="110" width="190" height="96" rx="8" fill="#fff" stroke="#555"/>
-  <text x="151" y="146" text-anchor="middle" font-size="18" font-weight="bold">CPU cores</text>
-  <text x="151" y="170" text-anchor="middle" font-size="14">run host code, call</text>
-  <text x="151" y="190" text-anchor="middle" font-size="14" font-family="Courier New, monospace">cudaMemcpy*()</text>
+  <!-- PCIe -->
+  <rect x="420" y="290" width="360" height="128" fill="#f1f1f1" stroke="#999" stroke-width="2"/>
+  <text x="600" y="276" text-anchor="middle" font-size="18" font-weight="bold" fill="#c62828">PCIe bus ≈ 32 GB/s (the bottleneck)</text>
 
-  <rect x="272" y="110" width="190" height="96" rx="8" fill="#fff" stroke="#555"/>
-  <text x="367" y="146" text-anchor="middle" font-size="18" font-weight="bold">PCIe root complex</text>
-  <text x="367" y="170" text-anchor="middle" font-size="14">+ memory controller</text>
-  <text x="367" y="190" text-anchor="middle" font-size="14">(on the CPU die)</text>
+  <!-- GPU -->
+  <rect x="780" y="80" width="380" height="370" rx="14" fill="#eefbea" stroke="#2e7d32" stroke-width="2"/>
+  <text x="970" y="112" text-anchor="middle" font-size="21" font-weight="bold" fill="#2e7d32">Graphics card (GPU)</text>
+  <rect x="820" y="130" width="300" height="70" rx="8" fill="#fff" stroke="#555"/>
+  <text x="970" y="163" text-anchor="middle" font-size="20" font-weight="bold">GPU cores</text>
+  <text x="970" y="186" text-anchor="middle" font-size="14">thousands of threads</text>
+  <rect x="820" y="230" width="300" height="196" rx="10" fill="#d4efd4" stroke="#2e7d32"/>
+  <text x="970" y="258" text-anchor="middle" font-size="18" font-weight="bold">GPU memory (GDDR)</text>
+  <text x="970" y="280" text-anchor="middle" font-size="15">≈ 1 TB/s</text>
+  <rect x="850" y="296" width="240" height="44" rx="6" fill="#fff" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="970" y="324" text-anchor="middle" font-size="16">image</text>
+  <rect x="850" y="364" width="240" height="44" rx="6" fill="#fff" stroke="#d9730d" stroke-width="2"/>
+  <text x="970" y="392" text-anchor="middle" font-size="16">rotated image</text>
 
-  <rect x="56" y="232" width="406" height="374" rx="10" fill="#dbe7fb" stroke="#1f5fbf"/>
-  <text x="259" y="260" text-anchor="middle" font-size="17" font-weight="bold">System memory: DDR5 SDRAM</text>
-  <text x="259" y="281" text-anchor="middle" font-size="14">≈ 77 GB/s (dual-channel DDR5-4800)</text>
+  <!-- 1: copy in -->
+  <line x1="350" y1="318" x2="846" y2="318" stroke="#1f5fbf" stroke-width="5" marker-end="url(#aBlue)"/>
+  <circle cx="600" cy="318" r="15" fill="#1f5fbf"/><text x="600" y="324" text-anchor="middle" font-size="17" font-weight="bold" fill="#fff">1</text>
 
-  <rect x="80" y="300" width="358" height="92" rx="8" fill="#fff" stroke="#c62828" stroke-width="2"/>
-  <text x="259" y="328" text-anchor="middle" font-size="16" font-weight="bold">Pageable buffer  h_img</text>
-  <text x="259" y="350" text-anchor="middle" font-size="14" font-family="Courier New, monospace">malloc() / new</text>
-  <text x="259" y="372" text-anchor="middle" font-size="13">OS may page it out / move it → not DMA-safe</text>
+  <!-- 3: copy back -->
+  <line x1="850" y1="386" x2="354" y2="386" stroke="#d9730d" stroke-width="5" marker-end="url(#aOrange)"/>
+  <circle cx="600" cy="386" r="15" fill="#d9730d"/><text x="600" y="392" text-anchor="middle" font-size="17" font-weight="bold" fill="#fff">3</text>
 
-  <rect x="80" y="456" width="358" height="130" rx="8" fill="#fff" stroke="#1f5fbf" stroke-width="2"/>
-  <text x="259" y="484" text-anchor="middle" font-size="16" font-weight="bold">Pinned (page-locked) buffer</text>
-  <text x="259" y="506" text-anchor="middle" font-size="14" font-family="Courier New, monospace">cudaMallocHost() / cudaHostRegister()</text>
-  <text x="259" y="528" text-anchor="middle" font-size="13">fixed physical pages → GPU can DMA directly</text>
-  <text x="259" y="548" text-anchor="middle" font-size="13">(for pageable copies the driver uses its</text>
-  <text x="259" y="566" text-anchor="middle" font-size="13">own hidden pinned "staging" buffer)</text>
-
-  <!-- step 1: pageable -> staging -->
-  <line x1="259" y1="392" x2="259" y2="452" stroke="#c62828" stroke-width="3" stroke-dasharray="8,5" marker-end="url(#aRed)"/>
-  <circle cx="232" cy="422" r="13" fill="#c62828"/><text x="232" y="427" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">1</text>
-  <text x="274" y="418" font-size="13" fill="#c62828" font-weight="bold">CPU copy</text>
-  <text x="274" y="434" font-size="13" fill="#c62828">(pageable only: extra copy)</text>
-
-  <!-- PCIe link -->
-  <rect x="490" y="440" width="130" height="164" fill="#f3f3f3" stroke="#777" stroke-width="2"/>
-  <text x="555" y="464" text-anchor="middle" font-size="15" font-weight="bold">PCIe 4.0 x16</text>
-  <text x="555" y="576" text-anchor="middle" font-size="12">≈ 32 GB/s each way</text>
-  <text x="555" y="592" text-anchor="middle" font-size="12">full duplex (Gen5 ≈ 64)</text>
-
-  <!-- DEVICE -->
-  <rect x="620" y="64" width="630" height="560" rx="14" fill="#eefbea" stroke="#2e7d32" stroke-width="2"/>
-  <text x="640" y="94" font-size="20" font-weight="bold" fill="#2e7d32">DEVICE (GPU)</text>
-
-  <rect x="646" y="110" width="578" height="104" rx="8" fill="#fff" stroke="#555"/>
-  <text x="935" y="134" text-anchor="middle" font-size="16" font-weight="bold">Streaming Multiprocessors (SMs): run the rotation kernel</text>
-  <g fill="#cfe8cf" stroke="#2e7d32">
-    <rect x="666" y="148" width="58" height="48" rx="4"/><rect x="734" y="148" width="58" height="48" rx="4"/>
-    <rect x="802" y="148" width="58" height="48" rx="4"/><rect x="870" y="148" width="58" height="48" rx="4"/>
-    <rect x="938" y="148" width="58" height="48" rx="4"/><rect x="1006" y="148" width="58" height="48" rx="4"/>
-    <rect x="1074" y="148" width="58" height="48" rx="4"/><rect x="1142" y="148" width="62" height="48" rx="4"/>
-  </g>
-  <g font-size="13" text-anchor="middle"><text x="695" y="177">SM</text><text x="763" y="177">SM</text><text x="831" y="177">SM</text><text x="899" y="177">SM</text><text x="967" y="177">SM</text><text x="1035" y="177">SM</text><text x="1103" y="177">SM</text><text x="1173" y="177">…</text></g>
-
-  <rect x="646" y="232" width="578" height="40" rx="6" fill="#fff" stroke="#555"/>
-  <text x="935" y="258" text-anchor="middle" font-size="15" font-weight="bold">L2 cache (shared by all SMs)</text>
-
-  <rect x="646" y="456" width="176" height="130" rx="8" fill="#fff" stroke="#555"/>
-  <text x="734" y="490" text-anchor="middle" font-size="16" font-weight="bold">Copy engines</text>
-  <text x="734" y="512" text-anchor="middle" font-size="14">(DMA engines)</text>
-  <text x="734" y="540" text-anchor="middle" font-size="13">move data without</text>
-  <text x="734" y="558" text-anchor="middle" font-size="13">using the SMs or CPU</text>
-
-  <rect x="856" y="330" width="368" height="276" rx="10" fill="#d4efd4" stroke="#2e7d32"/>
-  <text x="1040" y="354" text-anchor="middle" font-size="17" font-weight="bold">Device memory: GDDR6/6X (VRAM)</text>
-  <text x="1040" y="375" text-anchor="middle" font-size="14">≈ 0.5 – 1 TB/s  (HBM3: 3+ TB/s)</text>
-
-  <rect x="880" y="390" width="320" height="72" rx="8" fill="#fff" stroke="#1f5fbf" stroke-width="2"/>
-  <text x="1040" y="418" text-anchor="middle" font-size="16" font-weight="bold">d_src: input image</text>
-  <text x="1040" y="442" text-anchor="middle" font-size="14" font-family="Courier New, monospace">cudaMalloc()</text>
-
-  <rect x="880" y="500" width="320" height="76" rx="8" fill="#fff" stroke="#d9730d" stroke-width="2"/>
-  <text x="1040" y="530" text-anchor="middle" font-size="16" font-weight="bold">d_dst: rotated image</text>
-  <text x="1040" y="554" text-anchor="middle" font-size="14" font-family="Courier New, monospace">cudaMalloc()</text>
-
-  <!-- step 2: H2D DMA -->
-  <polyline points="438,500 646,500" fill="none" stroke="#1f5fbf" stroke-width="4" marker-end="url(#aBlue)"/>
-  <polyline points="822,500 846,500 846,426 878,426" fill="none" stroke="#1f5fbf" stroke-width="4" marker-end="url(#aBlue)"/>
-  <circle cx="555" cy="500" r="13" fill="#1f5fbf"/><text x="555" y="505" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">2</text>
-
-  <!-- step 4: D2H DMA -->
-  <polyline points="880,550 822,550" fill="none" stroke="#d9730d" stroke-width="4" marker-end="url(#aOrange)"/>
-  <polyline points="646,550 442,550" fill="none" stroke="#d9730d" stroke-width="4" marker-end="url(#aOrange)"/>
-  <circle cx="555" cy="550" r="13" fill="#d9730d"/><text x="555" y="555" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">4</text>
-
-  <!-- step 3: kernel -->
-  <line x1="960" y1="330" x2="960" y2="276" stroke="#2e7d32" stroke-width="4" marker-end="url(#aGreen)"/>
-  <line x1="1120" y1="274" x2="1120" y2="326" stroke="#2e7d32" stroke-width="4" marker-end="url(#aGreen)"/>
-  <circle cx="1040" cy="302" r="13" fill="#2e7d32"/><text x="1040" y="307" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">3</text>
-  <text x="952" y="307" text-anchor="end" font-size="13" fill="#2e7d32" font-weight="bold">read d_src</text>
-  <text x="1128" y="307" font-size="13" fill="#2e7d32" font-weight="bold">write d_dst</text>
+  <!-- 2: rotate -->
+  <line x1="880" y1="230" x2="880" y2="204" stroke="#2e7d32" stroke-width="4" marker-end="url(#aGreen)"/>
+  <line x1="1060" y1="202" x2="1060" y2="228" stroke="#2e7d32" stroke-width="4" marker-end="url(#aGreen)"/>
+  <circle cx="970" cy="215" r="14" fill="#2e7d32"/><text x="970" y="221" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">2</text>
 
   <!-- legend -->
-  <g font-size="15">
-    <circle cx="44" cy="652" r="11" fill="#c62828"/><text x="44" y="657" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1</text>
-    <text x="62" y="657"><tspan font-weight="bold">Pageable only:</tspan> the CPU copies h_img into a pinned staging buffer (extra copy that uses CPU time and memory bandwidth).</text>
-    <circle cx="44" cy="680" r="11" fill="#1f5fbf"/><text x="44" y="685" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">2</text>
-    <text x="62" y="685"><tspan font-weight="bold">Host → Device:</tspan> a GPU copy engine DMAs the pinned pages over PCIe into d_src (cudaMemcpyHostToDevice).</text>
-    <circle cx="44" cy="708" r="11" fill="#2e7d32"/><text x="44" y="713" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">3</text>
-    <text x="62" y="713"><tspan font-weight="bold">On device:</tspan> SMs read d_src and write d_dst through L2 at VRAM speed (0.5–1 TB/s): roughly 15–30× faster than the PCIe link.</text>
-    <circle cx="44" cy="736" r="11" fill="#d9730d"/><text x="44" y="741" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">4</text>
-    <text x="62" y="741"><tspan font-weight="bold">Device → Host:</tspan> a copy engine DMAs d_dst back over PCIe (cudaMemcpyDeviceToHost); pageable targets get another CPU copy.</text>
+  <g font-size="18">
+    <circle cx="60" cy="490" r="13" fill="#1f5fbf"/><text x="60" y="496" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">1</text>
+    <text x="82" y="496">Copy the image in over PCIe</text>
+    <circle cx="430" cy="490" r="13" fill="#2e7d32"/><text x="430" y="496" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">2</text>
+    <text x="452" y="496">GPU rotates it in its own memory</text>
+    <circle cx="830" cy="490" r="13" fill="#d9730d"/><text x="830" y="496" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">3</text>
+    <text x="852" y="496">Copy the result back</text>
   </g>
+  <text x="600" y="545" text-anchor="middle" font-size="19" font-weight="bold" fill="#222">PCIe is ~30× slower than GPU memory, so the copies take longer than the rotation.</text>
 </svg>
