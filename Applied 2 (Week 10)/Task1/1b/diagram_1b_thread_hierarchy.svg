@@ -134,7 +134,7 @@
 <text x="640" y="500" text-anchor="middle" font-size="16" fill="#444">"which tile" × "tile width" + "my spot in the tile"   (y is worked out the same way, with rows)</text>
 <rect x="50" y="556" width="380" height="60" rx="8" fill="#fff" stroke="#2e7d32" stroke-width="2"/>
 <text x="240" y="581" text-anchor="middle" font-size="17" font-weight="bold" fill="#2e7d32">Grid</text>
-<text x="240" y="603" text-anchor="middle" font-size="14">whole GPU: all SMs share the blocks</text>
+<text x="240" y="603" text-anchor="middle" font-size="14">all blocks of one launch, shared out across the SMs</text>
 <rect x="450" y="556" width="380" height="60" rx="8" fill="#fff" stroke="#1f5fbf" stroke-width="2"/>
 <text x="640" y="581" text-anchor="middle" font-size="17" font-weight="bold" fill="#1f5fbf">Block</text>
 <text x="640" y="603" text-anchor="middle" font-size="14">runs on one SM; threads can share fast memory</text>
