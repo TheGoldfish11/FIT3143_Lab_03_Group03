@@ -1,0 +1,4 @@
+Image,Copies in + out (ms),Rotation kernel (ms),Share of time spent copying
+1080p,0.99,0.143,88%
+4K,3.92,0.548,88%
+8K,15.62,1.434,92%

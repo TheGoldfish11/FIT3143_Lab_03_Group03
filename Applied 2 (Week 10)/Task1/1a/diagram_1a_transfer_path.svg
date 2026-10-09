@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="580" viewBox="0 0 1200 580" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="aBlue" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#1f5fbf"/></marker>
+    <marker id="aOrange" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#d9730d"/></marker>
+    <marker id="aGreen" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#2e7d32"/></marker>
+  </defs>
+  <rect width="1200" height="580" fill="#ffffff"/>
+
+  <text x="600" y="44" text-anchor="middle" font-size="28" font-weight="bold" fill="#222">Moving the image to the GPU and back</text>
+
+  <!-- HOST -->
+  <rect x="40" y="80" width="380" height="370" rx="14" fill="#eef4ff" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="230" y="112" text-anchor="middle" font-size="21" font-weight="bold" fill="#1f5fbf">Computer (host)</text>
+  <rect x="80" y="130" width="300" height="70" rx="8" fill="#fff" stroke="#555"/>
+  <text x="230" y="173" text-anchor="middle" font-size="20" font-weight="bold">CPU</text>
+  <rect x="80" y="230" width="300" height="196" rx="10" fill="#dbe7fb" stroke="#1f5fbf"/>
+  <text x="230" y="258" text-anchor="middle" font-size="18" font-weight="bold">System RAM (DDR5)</text>
+  <text x="230" y="280" text-anchor="middle" font-size="15">≈ 77 GB/s</text>
+  <rect x="110" y="296" width="240" height="44" rx="6" fill="#fff" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="230" y="324" text-anchor="middle" font-size="16">image</text>
+  <rect x="110" y="364" width="240" height="44" rx="6" fill="#fff" stroke="#d9730d" stroke-width="2"/>
+  <text x="230" y="392" text-anchor="middle" font-size="16">rotated image</text>
+
+  <!-- PCIe -->
+  <rect x="420" y="290" width="360" height="128" fill="#f1f1f1" stroke="#999" stroke-width="2"/>
+  <text x="600" y="276" text-anchor="middle" font-size="18" font-weight="bold" fill="#c62828">PCIe bus ≈ 32 GB/s (the bottleneck)</text>
+
+  <!-- GPU -->
+  <rect x="780" y="80" width="380" height="370" rx="14" fill="#eefbea" stroke="#2e7d32" stroke-width="2"/>
+  <text x="970" y="112" text-anchor="middle" font-size="21" font-weight="bold" fill="#2e7d32">Graphics card (GPU)</text>
+  <rect x="820" y="130" width="300" height="70" rx="8" fill="#fff" stroke="#555"/>
+  <text x="970" y="163" text-anchor="middle" font-size="20" font-weight="bold">GPU cores</text>
+  <text x="970" y="186" text-anchor="middle" font-size="14">thousands of threads</text>
+  <rect x="820" y="230" width="300" height="196" rx="10" fill="#d4efd4" stroke="#2e7d32"/>
+  <text x="970" y="258" text-anchor="middle" font-size="18" font-weight="bold">GPU memory (GDDR)</text>
+  <text x="970" y="280" text-anchor="middle" font-size="15">≈ 1 TB/s</text>
+  <rect x="850" y="296" width="240" height="44" rx="6" fill="#fff" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="970" y="324" text-anchor="middle" font-size="16">image</text>
+  <rect x="850" y="364" width="240" height="44" rx="6" fill="#fff" stroke="#d9730d" stroke-width="2"/>
+  <text x="970" y="392" text-anchor="middle" font-size="16">rotated image</text>
+
+  <!-- 1: copy in -->
+  <line x1="350" y1="318" x2="846" y2="318" stroke="#1f5fbf" stroke-width="5" marker-end="url(#aBlue)"/>
+  <circle cx="600" cy="318" r="15" fill="#1f5fbf"/><text x="600" y="324" text-anchor="middle" font-size="17" font-weight="bold" fill="#fff">1</text>
+
+  <!-- 3: copy back -->
+  <line x1="850" y1="386" x2="354" y2="386" stroke="#d9730d" stroke-width="5" marker-end="url(#aOrange)"/>
+  <circle cx="600" cy="386" r="15" fill="#d9730d"/><text x="600" y="392" text-anchor="middle" font-size="17" font-weight="bold" fill="#fff">3</text>
+
+  <!-- 2: rotate -->
+  <line x1="880" y1="230" x2="880" y2="204" stroke="#2e7d32" stroke-width="4" marker-end="url(#aGreen)"/>
+  <line x1="1060" y1="202" x2="1060" y2="228" stroke="#2e7d32" stroke-width="4" marker-end="url(#aGreen)"/>
+  <circle cx="970" cy="215" r="14" fill="#2e7d32"/><text x="970" y="221" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">2</text>
+
+  <!-- legend -->
+  <g font-size="18">
+    <circle cx="60" cy="490" r="13" fill="#1f5fbf"/><text x="60" y="496" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">1</text>
+    <text x="82" y="496">Copy the image in over PCIe</text>
+    <circle cx="430" cy="490" r="13" fill="#2e7d32"/><text x="430" y="496" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">2</text>
+    <text x="452" y="496">GPU rotates it in its own memory</text>
+    <circle cx="830" cy="490" r="13" fill="#d9730d"/><text x="830" y="496" text-anchor="middle" font-size="15" font-weight="bold" fill="#fff">3</text>
+    <text x="852" y="496">Copy the result back</text>
+  </g>
+  <text x="600" y="545" text-anchor="middle" font-size="19" font-weight="bold" fill="#222">PCIe is ~30× slower than GPU memory, so the copies take longer than the rotation.</text>
+</svg>

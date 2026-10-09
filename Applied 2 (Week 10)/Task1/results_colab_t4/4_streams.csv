@@ -1,0 +1,4 @@
+Image,1 stream (ms/image),3 streams (ms/image),Speed-up
+1080p,1.149,0.63,1.82x
+4K,4.448,2.455,1.81x
+8K,17.065,9.757,1.75x

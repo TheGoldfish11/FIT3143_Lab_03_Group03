@@ -1,0 +1,4 @@
+Image,Width,Height,Size (MB),H2D pageable (ms),D2H pageable (ms),H2D pinned (ms),D2H pinned (ms),D2D (ms),Kernel (ms),Sync per image (ms),Async 3 streams per image (ms),Copy share of sync time (%)
+1080p,1920,1080,6.2,1.278,1.471,0.513,0.482,0.058,0.143,1.149,0.63,88
+4K,3840,2160,24.9,4.976,5.643,2.018,1.898,0.207,0.548,4.448,2.455,88
+8K,7680,4320,99.5,20.902,22.391,8.046,7.57,0.84,1.434,17.065,9.757,92

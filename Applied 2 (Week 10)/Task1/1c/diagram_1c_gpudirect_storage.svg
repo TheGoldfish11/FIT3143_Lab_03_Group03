@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="aBlue" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#1f5fbf"/></marker>
+    <marker id="aGreen" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L14,7 L0,14 z" fill="#2e7d32"/></marker>
+  </defs>
+  <rect width="1200" height="640" fill="#ffffff"/>
+  <text x="600" y="44" text-anchor="middle" font-size="28" font-weight="bold" fill="#222">Loading an image: normal path vs GPUDirect Storage</text>
+
+  <!-- NORMAL -->
+  <rect x="30" y="72" width="1140" height="228" rx="14" fill="#fff6f4" stroke="#c62828" stroke-width="2"/>
+  <text x="54" y="104" font-size="21" font-weight="bold" fill="#c62828">Normal: 2 transfers, CPU involved</text>
+
+  <rect x="510" y="86" width="180" height="56" rx="8" fill="#fff" stroke="#555"/>
+  <text x="600" y="113" text-anchor="middle" font-size="18" font-weight="bold">CPU</text>
+  <text x="600" y="133" text-anchor="middle" font-size="13">manages both copies</text>
+  <line x1="600" y1="142" x2="600" y2="176" stroke="#555" stroke-width="2" stroke-dasharray="5,4"/>
+
+  <rect x="80" y="176" width="220" height="90" rx="10" fill="#eeeeee" stroke="#555" stroke-width="2"/>
+  <text x="190" y="216" text-anchor="middle" font-size="20" font-weight="bold">SSD</text>
+  <text x="190" y="242" text-anchor="middle" font-size="15">image file</text>
+
+  <rect x="490" y="176" width="220" height="90" rx="10" fill="#dbe7fb" stroke="#1f5fbf" stroke-width="2"/>
+  <text x="600" y="216" text-anchor="middle" font-size="20" font-weight="bold">System RAM</text>
+  <text x="600" y="242" text-anchor="middle" font-size="15">stopover copy</text>
+
+  <rect x="900" y="176" width="220" height="90" rx="10" fill="#d4efd4" stroke="#2e7d32" stroke-width="2"/>
+  <text x="1010" y="216" text-anchor="middle" font-size="20" font-weight="bold">GPU memory</text>
+  <text x="1010" y="242" text-anchor="middle" font-size="15">ready to rotate</text>
+
+  <line x1="300" y1="221" x2="486" y2="221" stroke="#1f5fbf" stroke-width="5" marker-end="url(#aBlue)"/>
+  <circle cx="393" cy="221" r="15" fill="#1f5fbf"/><text x="393" y="227" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">1</text>
+  <line x1="710" y1="221" x2="896" y2="221" stroke="#1f5fbf" stroke-width="5" marker-end="url(#aBlue)"/>
+  <circle cx="803" cy="221" r="15" fill="#1f5fbf"/><text x="803" y="227" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">2</text>
+
+  <!-- GDS -->
+  <rect x="30" y="320" width="1140" height="228" rx="14" fill="#f4fbf2" stroke="#2e7d32" stroke-width="2"/>
+  <text x="54" y="352" font-size="21" font-weight="bold" fill="#2e7d32">GPUDirect Storage: 1 direct transfer</text>
+
+  <rect x="510" y="334" width="180" height="56" rx="8" fill="#fff" stroke="#555"/>
+  <text x="600" y="361" text-anchor="middle" font-size="18" font-weight="bold">CPU</text>
+  <text x="600" y="381" text-anchor="middle" font-size="13">only sends the request</text>
+
+  <rect x="80" y="420" width="220" height="90" rx="10" fill="#eeeeee" stroke="#555" stroke-width="2"/>
+  <text x="190" y="460" text-anchor="middle" font-size="20" font-weight="bold">SSD</text>
+  <text x="190" y="486" text-anchor="middle" font-size="15">image file</text>
+
+  <rect x="490" y="408" width="220" height="50" rx="10" fill="#f7f7f7" stroke="#aaa" stroke-width="2" stroke-dasharray="7,5"/>
+  <text x="600" y="439" text-anchor="middle" font-size="17" fill="#999">System RAM (skipped)</text>
+
+  <rect x="900" y="420" width="220" height="90" rx="10" fill="#d4efd4" stroke="#2e7d32" stroke-width="2"/>
+  <text x="1010" y="460" text-anchor="middle" font-size="20" font-weight="bold">GPU memory</text>
+  <text x="1010" y="486" text-anchor="middle" font-size="15">ready to rotate</text>
+
+  <line x1="300" y1="490" x2="896" y2="490" stroke="#2e7d32" stroke-width="5" marker-end="url(#aGreen)"/>
+  <circle cx="600" cy="490" r="15" fill="#2e7d32"/><text x="600" y="496" text-anchor="middle" font-size="16" font-weight="bold" fill="#fff">1</text>
+  <text x="600" y="527" text-anchor="middle" font-size="15" fill="#2e7d32" font-weight="bold">direct DMA over PCIe</text>
+
+  <text x="600" y="590" text-anchor="middle" font-size="19" font-weight="bold" fill="#222">GDS removes the stop in system RAM: one transfer instead of two, and the CPU never handles the data.</text>
+  <text x="600" y="618" text-anchor="middle" font-size="15" fill="#555">(The data still crosses PCIe; it just goes straight from the SSD to the GPU.)</text>
+</svg>

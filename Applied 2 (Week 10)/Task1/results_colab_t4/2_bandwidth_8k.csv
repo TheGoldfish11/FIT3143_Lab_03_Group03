@@ -1,0 +1,5 @@
+Path,Bandwidth (GB/s)
+"PCIe copy, pageable memory",4.8
+"PCIe copy, pinned memory",12.4
+Rotation kernel (GPU memory),138.8
+Plain copy inside GPU memory,236.9

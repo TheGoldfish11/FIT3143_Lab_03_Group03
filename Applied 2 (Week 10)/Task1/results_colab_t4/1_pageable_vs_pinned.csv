@@ -1,0 +1,4 @@
+Image,Size (MB),Pageable upload (ms),Pinned upload (ms),Pinned speed-up
+1080p,6.2,1.278,0.513,2.5x
+4K,24.9,4.976,2.018,2.5x
+8K,99.5,20.902,8.046,2.6x
