@@ -1,0 +1,79 @@
+EV charging WSN - base station log
+Started 2026-10-10 23:12:09
+Grid 3x3 (9 nodes), k=6 ports, threshold=1, cycle=1000 ms, duration=20.0 s, window=5.0 s, p_arrive=0.70, p_depart=0.30, poll=1000 us, seed=3143
+------------------------------------------------------------
+Alert #1   logged 2026-10-10 23:12:17   sim time 8.008 s
+Reporter        : node 2 (0,2), report #1
+Detected at     : 2026-10-10 23:12:17
+Availability    : 0/6 free
+Neighbours      : node 5 (1,2) 1/6 free; node 1 (0,1) 0/6 free
+Neighbour msgs  : 4 messages, 56 bytes
+Decision        : 3 nearest node(s) at distance 2: 0 (0,0) 4 (1,1) 8 (2,2)
+------------------------------------------------------------
+Alert #2   logged 2026-10-10 23:12:18   sim time 9.008 s
+Reporter        : node 8 (2,2), report #1
+Detected at     : 2026-10-10 23:12:18
+Availability    : 1/6 free
+Neighbours      : node 5 (1,2) 1/6 free; node 7 (2,1) 1/6 free
+Neighbour msgs  : 4 messages, 56 bytes
+Decision        : 2 nearest node(s) at distance 2: 4 (1,1) 6 (2,0)
+------------------------------------------------------------
+Alert #3   logged 2026-10-10 23:12:25   sim time 16.006 s
+Reporter        : node 6 (2,0), report #1
+Detected at     : 2026-10-10 23:12:25
+Availability    : 1/6 free
+Neighbours      : node 3 (1,0) 1/6 free; node 7 (2,1) 0/6 free
+Neighbour msgs  : 4 messages, 56 bytes
+Decision        : 3 nearest node(s) at distance 2: 0 (0,0) 4 (1,1) 8 (2,2)
+------------------------------------------------------------
+Alert #4   logged 2026-10-10 23:12:25   sim time 16.006 s
+Reporter        : node 4 (1,1), report #1
+Detected at     : 2026-10-10 23:12:25
+Availability    : 0/6 free
+Neighbours      : node 1 (0,1) 1/6 free; node 7 (2,1) 0/6 free; node 3 (1,0) 1/6 free; node 5 (1,2) 1/6 free
+Neighbour msgs  : 8 messages, 112 bytes
+Decision        : 3 nearest node(s) at distance 2: 0 (0,0) 2 (0,2) 8 (2,2)
+------------------------------------------------------------
+Alert #5   logged 2026-10-10 23:12:25   sim time 16.008 s
+Reporter        : node 0 (0,0), report #1
+Detected at     : 2026-10-10 23:12:25
+Availability    : 0/6 free
+Neighbours      : node 3 (1,0) 1/6 free; node 1 (0,1) 1/6 free
+Neighbour msgs  : 4 messages, 56 bytes
+Decision        : 1 nearest node(s) at distance 2: 2 (0,2)
+------------------------------------------------------------
+Alert #6   logged 2026-10-10 23:12:25   sim time 16.008 s
+Reporter        : node 3 (1,0), report #1
+Detected at     : 2026-10-10 23:12:25
+Availability    : 1/6 free
+Neighbours      : node 0 (0,0) 0/6 free; node 6 (2,0) 1/6 free; node 4 (1,1) 0/6 free
+Neighbour msgs  : 6 messages, 84 bytes
+Decision        : all neighbours reported within 5.0 s -> no nodes available nearby
+============================================================
+SUMMARY
+Simulation time         : 20.003 s
+Congestion events       : 72 (nodes at or below threshold)
+Redirected to neighbour : 66
+Alerts to base station  : 6 (5 with nearest nodes, 1 none nearby)
+Total messages          : 407 (368 node<->node, 15 to base, 24 from base)
+Messages by type        :
+  NBR_REQ      184
+  NBR_RESP     184
+  REPORT       6
+  BASE_REPLY   6
+  TERMINATE    9
+  TERM_ACK     9
+  FINAL        9
+Round-trip times (s)    :     count        avg        min        max
+  NBR_REQ -> NBR_RESP           184   0.002947   0.001099   0.012976
+  REPORT  -> BASE_REPLY           6   0.003516   0.002268   0.004403
+Per node                : node  (x,y)  events redirects reports
+                             0 (0,0)     11        10       1
+                             1 (0,1)      7         7       0
+                             2 (0,2)     12        11       1
+                             3 (1,0)      7         6       1
+                             4 (1,1)      7         6       1
+                             5 (1,2)      6         6       0
+                             6 (2,0)      8         7       1
+                             7 (2,1)      6         6       0
+                             8 (2,2)      8         7       1
