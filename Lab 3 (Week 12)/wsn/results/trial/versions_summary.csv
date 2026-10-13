@@ -1,0 +1,7 @@
+base_mode,node_mode,runs,report_rtt_ms,nbr_rtt_ms,base_cpu_pct,node_cpu_s,main_overrun_ms,shutdown_ms,alerts,base_idle_polls
+poll,nonblock,3,3.270,4.354,2.581,0.383,0.908,4.426,89.667,12306.000
+poll,block,3,1.760,0.870,2.602,0.409,0.572,4.416,89.000,12805.000
+block,nonblock,3,4.639,3.076,99.012,0.347,4.112,5.208,90.667,0.000
+block,block,3,0.076,0.978,99.269,0.363,9.390,2.796,91.667,0.000
+irecv,nonblock,3,3.096,2.819,2.397,0.389,0.353,3.727,86.333,12863.000
+irecv,block,3,1.561,0.917,2.420,0.410,0.613,3.799,87.333,12837.000

@@ -53,7 +53,7 @@ def summarise(rows):
 
 
 def style(ax, title, unit):
-    ax.set_title(title, loc='left', fontsize=13, fontweight='bold', color=INK, pad=12)
+    ax.set_title(title, loc='left', fontsize=13, fontweight='bold', color=INK, pad=34)
     ax.set_ylabel(unit, color=MUTED, fontsize=11)
     ax.grid(axis='y', color=GRID, linewidth=1)
     ax.set_axisbelow(True)
@@ -86,8 +86,9 @@ def bar_chart(summary, col, title, unit, path, note):
     ax.set_ylim(bottom=0)
     ax.margins(y=0.15)
     style(ax, title, unit)
-    ax.legend(frameon=False, fontsize=10, loc='upper left', bbox_to_anchor=(0, 1.02), ncol=2,
-              labelcolor=INK)
+    # legend sits in its own row between the title and the plot, clear of tall bars
+    ax.legend(frameon=False, fontsize=10, loc='lower left', bbox_to_anchor=(0, 1.0), ncol=2,
+              labelcolor=INK, borderaxespad=0.2)
     fig.text(0.01, 0.01, note, fontsize=8.5, color=MUTED)
     fig.tight_layout(rect=(0, 0.04, 1, 1))
     fig.savefig(path)
