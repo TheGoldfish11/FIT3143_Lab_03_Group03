@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Why the nodes never block: with blocking receives two congested neighbours deadlock, while the polling loop answers each other and both rounds finish.">
+<defs><marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2430"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3563a8"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b4600e"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8597"/></marker></defs>
+<rect width="1280" height="720" fill="#ffffff"/>
+<rect x="24" y="24" width="604" height="672" rx="14" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="48" y="60" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" fill="#1f2430">Blocking receive</text>
+<text x="48" y="86" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="start" fill="#5d6577">MPI_Send, then MPI_Recv(NBR_RESP)</text>
+<rect x="80" y="110" width="180" height="54" rx="10" fill="#fdeaea" stroke="#c0392b" stroke-width="2"/>
+<text x="170.0" y="133.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Node A</text>
+<text x="170.0" y="152.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">0/6 free</text>
+<line x1="170" y1="164" x2="170" y2="580" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<rect x="390" y="110" width="180" height="54" rx="10" fill="#fdeaea" stroke="#c0392b" stroke-width="2"/>
+<text x="480.0" y="133.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Node B</text>
+<text x="480.0" y="152.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">1/6 free</text>
+<line x1="480" y1="164" x2="480" y2="580" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<polyline points="170,196 480,246" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<polyline points="480,196 170,246" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<text x="186" y="190" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="start" fill="#3563a8">NBR_REQ</text>
+<text x="464" y="190" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="end" fill="#3563a8">NBR_REQ</text>
+<rect x="162" y="250" width="16" height="300" rx="3" fill="#fdeaea" stroke="#c0392b" stroke-width="1.5"/>
+<rect x="472" y="250" width="16" height="300" rx="3" fill="#fdeaea" stroke="#c0392b" stroke-width="1.5"/>
+<text x="190" y="300" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#c0392b">blocked in MPI_Recv,</text>
+<text x="190" y="320" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#c0392b">waiting for B’s reply</text>
+<text x="460" y="400" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="end" fill="#c0392b">blocked in MPI_Recv,</text>
+<text x="460" y="420" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="end" fill="#c0392b">waiting for A’s reply</text>
+<text x="190" y="360" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">B’s request: never read</text>
+<text x="460" y="460" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" fill="#5d6577">A’s request: never read</text>
+<text x="326" y="622" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="#c0392b">✗ Deadlock</text>
+<text x="326" y="652" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="middle" fill="#1f2430">each waits for a reply the other never sends</text>
+<rect x="652" y="24" width="604" height="672" rx="14" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="676" y="60" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" fill="#1f2430">Our loop</text>
+<text x="676" y="86" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="start" fill="#5d6577">MPI_Iprobe + MPI_Recv, MPI_Isend</text>
+<rect x="708" y="110" width="180" height="54" rx="10" fill="#fdeaea" stroke="#c0392b" stroke-width="2"/>
+<text x="798.0" y="133.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Node A</text>
+<text x="798.0" y="152.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">0/6 free</text>
+<line x1="798" y1="164" x2="798" y2="580" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<rect x="1018" y="110" width="180" height="54" rx="10" fill="#fdeaea" stroke="#c0392b" stroke-width="2"/>
+<text x="1108.0" y="133.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Node B</text>
+<text x="1108.0" y="152.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">1/6 free</text>
+<line x1="1108" y1="164" x2="1108" y2="580" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<polyline points="806,196 1100,246" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<polyline points="1100,196 806,246" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<text x="814" y="190" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="start" fill="#3563a8">NBR_REQ</text>
+<text x="1092" y="190" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="end" fill="#3563a8">NBR_REQ</text>
+<rect x="790" y="190" width="16" height="210" rx="3" fill="#d9e5f7" stroke="#3563a8" stroke-width="1.5"/>
+<rect x="1100" y="190" width="16" height="210" rx="3" fill="#d9e5f7" stroke="#3563a8" stroke-width="1.5"/>
+<text x="818" y="272" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#1f2430">next pass answers B</text>
+<text x="1088" y="272" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="end" fill="#1f2430">next pass answers A</text>
+<polyline points="806,290 1100,340" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<polyline points="1100,290 806,340" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<text x="814" y="368" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="start" fill="#3563a8">NBR_RESP</text>
+<text x="1092" y="368" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="end" fill="#3563a8">NBR_RESP</text>
+<text x="818" y="420" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#2f7d4a">round done ✓</text>
+<text x="1088" y="420" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="end" fill="#2f7d4a">round done ✓</text>
+<text x="954" y="622" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="#2f7d4a">✓ No deadlock</text>
+<text x="954" y="652" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="middle" fill="#1f2430">nothing waits; replies go out on the next pass</text>
+</svg>

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="The base station is one thread polling for messages; each report is answered with every nearest available node or with no nodes nearby, and shutdown happens in two phases.">
+<defs><marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2430"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3563a8"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b4600e"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8597"/></marker></defs>
+<rect width="1280" height="720" fill="#ffffff"/>
+<rect x="24" y="24" width="420" height="452" rx="14" fill="#fffaf3" stroke="#b4600e" stroke-width="2"/>
+<text x="48" y="58" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#1f2430">Base station main loop</text>
+<text x="48" y="80" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#5d6577">1 MPI process · 1 thread</text>
+<rect x="48" y="98" width="372" height="82" rx="10" fill="#ffffff" stroke="#b4600e" stroke-width="2"/>
+<text x="234.0" y="126.6" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">Poll for any message</text>
+<text x="234.0" y="145.2" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">MPI_Iprobe(ANY_SOURCE, ANY_TAG)</text>
+<text x="234.0" y="162.8" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">nothing waiting → sleep -i µs</text>
+<polyline points="136,180 136,228" fill="none" stroke="#7d8597" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-grey)"/>
+<polyline points="332,180 332,228" fill="none" stroke="#b4600e" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-amber)"/>
+<rect x="48" y="230" width="176" height="84" rx="10" fill="#ffffff" stroke="#7d8597" stroke-width="2"/>
+<text x="136.0" y="258.6" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="700" text-anchor="middle" fill="#7d8597">TERM_ACK</text>
+<text x="136.0" y="277.9" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">store node stats</text>
+<text x="136.0" y="295.8" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">acks++</text>
+<rect x="244" y="230" width="176" height="84" rx="10" fill="#ffffff" stroke="#b4600e" stroke-width="2"/>
+<text x="332.0" y="267.4" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="700" text-anchor="middle" fill="#b4600e">REPORT</text>
+<text x="332.0" y="286.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">handle_report(R)</text>
+<polyline points="136,314 136,340 36,340 36,139 46,139" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="90" y="334" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">loop</text>
+<rect x="48" y="364" width="372" height="92" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2"/>
+<text x="234.0" y="397.3" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#1f2430">Remembers, per node</text>
+<text x="234.0" y="415.6" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">last_report[]  known_avail[]  known_time[]</text>
+<text x="234.0" y="433.1" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">filled from reports only</text>
+<rect x="468" y="24" width="788" height="452" rx="14" fill="#fffaf3" stroke="#b4600e" stroke-width="2"/>
+<text x="492" y="58" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="18" font-weight="700" text-anchor="start" fill="#1f2430">handle_report(R)</text>
+<polyline points="420,272 484,272 484,114 498,114" fill="none" stroke="#b4600e" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-amber)"/>
+<rect x="500" y="84" width="360" height="60" rx="10" fill="#ffffff" stroke="#b4600e" stroke-width="2"/>
+<text x="680.0" y="110.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">REPORT from node R</text>
+<text x="680.0" y="129.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">R&#x27;s and its neighbours&#x27; free ports</text>
+<polyline points="680,144 680,162" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<polygon points="680,164.0 870.0,220 680,276.0 490.0,220" fill="#ffffff" stroke="#1f2430" stroke-width="2"/>
+<text x="680" y="214.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#1f2430">Did every neighbour of R</text>
+<text x="680" y="235.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#1f2430">report in the last w s?</text>
+<polyline points="870,220 928,220" fill="none" stroke="#b4600e" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-amber)"/>
+<text x="899" y="210" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#b4600e">yes</text>
+<rect x="930" y="180" width="300" height="80" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="1080.0" y="214.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">Reply: no nodes</text>
+<text x="1080.0" y="236.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">available nearby</text>
+<polyline points="680,276 680,304" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<text x="694" y="296" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#2f7d4a">no</text>
+<rect x="500" y="306" width="360" height="92" rx="10" fill="#ffffff" stroke="#1f2430" stroke-width="2"/>
+<text x="680.0" y="339.6" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">Search d = 2, 3, … hops out</text>
+<text x="680.0" y="358.2" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">skip nodes that reported, or were</text>
+<text x="680.0" y="375.8" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">shown congested, in the last w s</text>
+<polyline points="860,352 928,352" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<rect x="930" y="306" width="300" height="92" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="1080.0" y="339.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">Reply with ALL nodes</text>
+<text x="1080.0" y="358.6" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">at the smallest distance d</text>
+<text x="1080.0" y="376.5" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">(a tie returns several)</text>
+<polyline points="1080,398 1080,418" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<polyline points="1230,220 1244,220 1244,442 1232,442" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<rect x="500" y="420" width="730" height="44" rx="10" fill="#ffffff" stroke="#1f2430" stroke-width="2"/>
+<text x="865.0" y="446.9" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="middle" fill="#1f2430">update tables  ·  BASE_REPLY via MPI_Isend  ·  log the alert</text>
+<text x="24" y="528" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" fill="#1f2430">Shutdown in two phases, so no message is left unreceived</text>
+<rect x="24" y="548" width="226" height="100" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="137.0" y="594.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">Run for -d seconds</text>
+<text x="137.0" y="613.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">answer every report</text>
+<polyline points="251,598 273,598" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<rect x="275" y="548" width="226" height="100" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2"/>
+<text x="388.0" y="594.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">TERMINATE → all nodes</text>
+<text x="388.0" y="613.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">nodes stop new rounds</text>
+<polyline points="502,598 524,598" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<rect x="526" y="548" width="226" height="100" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2"/>
+<text x="639.0" y="594.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">Wait for m·n TERM_ACKs</text>
+<text x="639.0" y="613.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">still answering reports</text>
+<polyline points="753,598 775,598" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<rect x="777" y="548" width="226" height="100" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2"/>
+<text x="890.0" y="594.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">FINAL → all nodes</text>
+<text x="890.0" y="613.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">nothing left in flight</text>
+<polyline points="1004,598 1026,598" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<rect x="1028" y="548" width="226" height="100" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2"/>
+<text x="1141.0" y="594.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="#1f2430">Summary to log</text>
+<text x="1141.0" y="613.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">free memory, MPI_Finalize</text>
+<text x="24" y="684" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#5d6577">MPI keeps messages between two processes in order, so a node always gets its last BASE_REPLY before FINAL.</text>
+</svg>

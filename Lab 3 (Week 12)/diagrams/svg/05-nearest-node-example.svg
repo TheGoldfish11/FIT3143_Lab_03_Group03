@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Two real alerts from the sample log: Node 0 is sent node 2 because nodes 4 and 6 had just reported; Node 3 is told nothing is nearby because all its neighbours had reported.">
+<defs><marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2430"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3563a8"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b4600e"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8597"/></marker></defs>
+<rect width="1280" height="720" fill="#ffffff"/>
+<rect x="24" y="24" width="604" height="672" rx="14" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="48" y="60" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" fill="#1f2430">Alert #5: Node 0 reports</text>
+<text x="48" y="86" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#5d6577">sim time 16.008 s  ·  window w = 5 s</text>
+<rect x="70" y="110" width="160" height="118" rx="10" fill="#fdeaea" stroke="#c0392b" stroke-width="3"/>
+<text x="82" y="132" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577"></text>
+<text x="150" y="160" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 0</text>
+<text x="150" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">reporter</text>
+<text x="150" y="208" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1f2430">0/6 free</text>
+<rect x="246" y="110" width="160" height="118" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="258" y="132" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=1</text>
+<text x="326" y="160" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 1</text>
+<text x="326" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">no recent report</text>
+<text x="326" y="208" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">1/6 free</text>
+<rect x="422" y="110" width="160" height="118" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="3"/>
+<text x="434" y="132" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=2</text>
+<text x="502" y="160" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 2</text>
+<text x="502" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">last report 8.0 s ago</text>
+<text x="502" y="208" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1f2430">returned ✓</text>
+<rect x="70" y="244" width="160" height="118" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="82" y="266" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=1</text>
+<text x="150" y="294" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 3</text>
+<text x="150" y="320" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">no recent report</text>
+<text x="150" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">1/6 free</text>
+<rect x="246" y="244" width="160" height="118" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="258" y="266" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=2</text>
+<text x="326" y="294" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 4</text>
+<text x="326" y="320" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">reported 16.006 s</text>
+<text x="326" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">ruled out</text>
+<rect x="422" y="244" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="434" y="266" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=3</text>
+<text x="502" y="294" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 5</text>
+<text x="502" y="320" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not searched</text>
+<text x="502" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<rect x="70" y="378" width="160" height="118" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="82" y="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=2</text>
+<text x="150" y="428" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 6</text>
+<text x="150" y="454" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">reported 16.006 s</text>
+<text x="150" y="476" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">ruled out</text>
+<rect x="246" y="378" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="258" y="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=3</text>
+<text x="326" y="428" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 7</text>
+<text x="326" y="454" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not searched</text>
+<text x="326" y="476" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<rect x="422" y="378" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="434" y="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=4</text>
+<text x="502" y="428" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 8</text>
+<text x="502" y="454" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not searched</text>
+<text x="502" y="476" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<text x="48" y="546" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="19" font-weight="700" text-anchor="start" fill="#2f7d4a">Reply → node 2 (distance 2)</text>
+<text x="48" y="574" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">Decision : 1 nearest node(s) at distance 2: 2 (0,2)</text>
+<text x="48" y="612" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">Nodes 1 and 3 had not reported, so the base searches.</text>
+<text x="48" y="634" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">Nodes 4 and 6 are also 2 hops away, but they had just</text>
+<text x="48" y="656" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">reported, so they are probably full too.</text>
+<rect x="652" y="24" width="604" height="672" rx="14" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="676" y="60" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" fill="#1f2430">Alert #6: Node 3 reports</text>
+<text x="676" y="86" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#5d6577">same moment (16.008 s)  ·  w = 5 s</text>
+<rect x="698" y="110" width="160" height="118" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="710" y="132" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=1</text>
+<text x="778" y="160" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 0</text>
+<text x="778" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">reported 16.008 s</text>
+<text x="778" y="208" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">within w ✓</text>
+<rect x="874" y="110" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="886" y="132" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=2</text>
+<text x="954" y="160" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 1</text>
+<text x="954" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not checked</text>
+<text x="954" y="208" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<rect x="1050" y="110" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="1062" y="132" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=3</text>
+<text x="1130" y="160" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 2</text>
+<text x="1130" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not checked</text>
+<text x="1130" y="208" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<rect x="698" y="244" width="160" height="118" rx="10" fill="#fdeaea" stroke="#c0392b" stroke-width="3"/>
+<text x="710" y="266" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577"></text>
+<text x="778" y="294" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 3</text>
+<text x="778" y="320" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">reporter</text>
+<text x="778" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1f2430">1/6 free</text>
+<rect x="874" y="244" width="160" height="118" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="886" y="266" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=1</text>
+<text x="954" y="294" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 4</text>
+<text x="954" y="320" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">reported 16.006 s</text>
+<text x="954" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">within w ✓</text>
+<rect x="1050" y="244" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="1062" y="266" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=2</text>
+<text x="1130" y="294" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 5</text>
+<text x="1130" y="320" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not checked</text>
+<text x="1130" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<rect x="698" y="378" width="160" height="118" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="710" y="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=1</text>
+<text x="778" y="428" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Node 6</text>
+<text x="778" y="454" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">reported 16.006 s</text>
+<text x="778" y="476" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">within w ✓</text>
+<rect x="874" y="378" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="886" y="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=2</text>
+<text x="954" y="428" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 7</text>
+<text x="954" y="454" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not checked</text>
+<text x="954" y="476" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<rect x="1050" y="378" width="160" height="118" rx="10" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="1062" y="400" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">d=3</text>
+<text x="1130" y="428" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#5d6577">Node 8</text>
+<text x="1130" y="454" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">not checked</text>
+<text x="1130" y="476" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577"></text>
+<text x="676" y="546" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="19" font-weight="700" text-anchor="start" fill="#b4600e">Reply → no nodes available nearby</text>
+<text x="676" y="574" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">Decision : all neighbours reported within 5.0 s</text>
+<text x="676" y="612" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">All three neighbours (0, 4, 6) reported within w.</text>
+<text x="676" y="634" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">Their reports already covered the nodes beyond</text>
+<text x="676" y="656" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">them, so there is nowhere close to send EVs.</text>
+</svg>

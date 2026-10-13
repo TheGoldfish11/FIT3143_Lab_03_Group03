@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Message sequence for one incident and for shutdown, with payload sizes and the timestamps used to measure round-trip delay.">
+<defs><marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2430"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3563a8"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b4600e"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8597"/></marker></defs>
+<rect width="1280" height="720" fill="#ffffff"/>
+<rect x="135" y="28" width="190" height="58" rx="10" fill="#fdeaea" stroke="#c0392b" stroke-width="2"/>
+<text x="230.0" y="53.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Node 0</text>
+<text x="230.0" y="72.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">reporter</text>
+<line x1="230" y1="86" x2="230" y2="644" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<rect x="425" y="28" width="190" height="58" rx="10" fill="#eaf1fb" stroke="#3563a8" stroke-width="2"/>
+<text x="520.0" y="53.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Node 1</text>
+<text x="520.0" y="72.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">neighbour</text>
+<line x1="520" y1="86" x2="520" y2="644" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<rect x="665" y="28" width="190" height="58" rx="10" fill="#eaf1fb" stroke="#3563a8" stroke-width="2"/>
+<text x="760.0" y="53.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Node 3</text>
+<text x="760.0" y="72.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">neighbour</text>
+<line x1="760" y1="86" x2="760" y2="644" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<rect x="1005" y="28" width="190" height="58" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="1100.0" y="53.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">Base station</text>
+<text x="1100.0" y="72.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">rank m·n</text>
+<line x1="1100" y1="86" x2="1100" y2="644" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="5 5"/>
+<rect x="222" y="112" width="16" height="330" rx="3" fill="#d9e5f7" stroke="#3563a8" stroke-width="1.5"/>
+<rect x="24" y="104" width="186" height="52" rx="8" fill="#fdeaea" stroke="#c0392b" stroke-width="1.5"/>
+<text x="117.0" y="125.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">0/6 free ≤ threshold</text>
+<text x="117.0" y="143.0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">t1 = MPI_Wtime()</text>
+<polyline points="238,150 520,150" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<rect x="310.6" y="128.5" width="128.8" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="375.0" y="144.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#3563a8">NBR_REQ · 12 B</text>
+<polyline points="238,182 760,182" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<rect x="575.6" y="160.5" width="128.8" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="640" y="176.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#3563a8">NBR_REQ · 12 B</text>
+<polyline points="520,226 238,226" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<rect x="262.2" y="204.5" width="225.6" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="375.0" y="220.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#3563a8">NBR_RESP · 16 B, echoes t1</text>
+<polyline points="760,258 238,258" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)"/>
+<rect x="571.5" y="236.5" width="136.9" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="640" y="252.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#3563a8">NBR_RESP · 16 B</text>
+<rect x="24" y="234" width="186" height="52" rx="8" fill="#f2f3f6" stroke="#7d8597" stroke-width="1.5"/>
+<text x="117.0" y="255.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">neighbour delay</text>
+<text x="117.0" y="273.0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">RTT = now − t1</text>
+<rect x="24" y="312" width="186" height="52" rx="8" fill="#fff1e0" stroke="#b4600e" stroke-width="1.5"/>
+<text x="117.0" y="333.4" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">all neighbours full</text>
+<text x="117.0" y="351.0" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">t2 = MPI_Wtime()</text>
+<polyline points="238,346 1092,346" fill="none" stroke="#b4600e" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-amber)"/>
+<rect x="482.9" y="324.5" width="314.2" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="640" y="340.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#b4600e">REPORT · 104 B (one derived datatype)</text>
+<rect x="1092" y="346" width="16" height="56" rx="3" fill="#fff1e0" stroke="#b4600e" stroke-width="1.5"/>
+<text x="1120" y="370" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#1f2430">handle_report</text>
+<text x="1120" y="390" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">takes base_proc_s</text>
+<polyline points="1092,404 238,404" fill="none" stroke="#b4600e" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-amber)"/>
+<rect x="450.6" y="382.5" width="378.7" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="640" y="398.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#b4600e">BASE_REPLY · 540 B, echoes t2 and base_proc_s</text>
+<rect x="24" y="392" width="186" height="66" rx="8" fill="#f2f3f6" stroke="#7d8597" stroke-width="1.5"/>
+<text x="117.0" y="411.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">report delay</text>
+<text x="117.0" y="429.2" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">RTT = now − t2</text>
+<text x="117.0" y="446.8" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#1f2430">      − base_proc_s</text>
+<line x1="24" y1="486" x2="1256" y2="486" stroke="#7d8597" stroke-width="1.5" stroke-dasharray="8 6"/>
+<rect x="490.9" y="474.0" width="298.2" height="24" rx="12.0" fill="#f2f3f6" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="640" y="491.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1f2430">after -d seconds: two-phase shutdown</text>
+<polyline points="1100,528 760,528 520,528 230,528" fill="none" stroke="#7d8597" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-grey)" marker-mid="url(#ah-grey)"/>
+<rect x="809.2" y="506.5" width="241.7" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="930" y="522.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#7d8597">TERMINATE · 0 B → every node</text>
+<polyline points="230,572 520,572 760,572 1100,572" fill="none" stroke="#7d8597" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-grey)" marker-mid="url(#ah-grey)"/>
+<rect x="776.9" y="550.5" width="306.2" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="930" y="566.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#7d8597">TERM_ACK · 140 B stats, one per node</text>
+<text x="1120" y="568" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">waits for all</text>
+<text x="1120" y="586" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">m·n acks</text>
+<polyline points="1100,616 760,616 520,616 230,616" fill="none" stroke="#7d8597" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-grey)" marker-mid="url(#ah-grey)"/>
+<rect x="825.3" y="594.5" width="209.4" height="23" rx="11.5" fill="#ffffff" stroke="none"/>
+<text x="930" y="610.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#7d8597">FINAL · 0 B → every node</text>
+<rect x="164" y="648" width="132" height="36" rx="6" fill="#ffffff" stroke="#7d8597" stroke-width="1.5"/>
+<text x="230.0" y="670.2" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">MPI_Finalize</text>
+<rect x="454" y="648" width="132" height="36" rx="6" fill="#ffffff" stroke="#7d8597" stroke-width="1.5"/>
+<text x="520.0" y="670.2" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">MPI_Finalize</text>
+<rect x="694" y="648" width="132" height="36" rx="6" fill="#ffffff" stroke="#7d8597" stroke-width="1.5"/>
+<text x="760.0" y="670.2" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">MPI_Finalize</text>
+<rect x="1034" y="648" width="132" height="36" rx="6" fill="#ffffff" stroke="#7d8597" stroke-width="1.5"/>
+<text x="1100.0" y="670.2" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">MPI_Finalize</text>
+<rect x="24" y="512" width="186" height="92" rx="8" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="117.0" y="545.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle" fill="#5d6577">0 B = empty message;</text>
+<text x="117.0" y="561.9" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle" fill="#5d6577">the tag is the whole</text>
+<text x="117.0" y="578.1" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle" fill="#5d6577">instruction</text>
+</svg>

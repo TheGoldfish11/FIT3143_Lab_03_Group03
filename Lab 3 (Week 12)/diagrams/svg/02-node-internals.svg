@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Inside one charging node process: k port threads each write their own slot of a shared array, and thread 0 reads it, keeps a history, and is the only thread that calls MPI.">
+<defs><marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2430"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3563a8"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b4600e"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8597"/></marker></defs>
+<rect width="1280" height="720" fill="#ffffff"/>
+<rect x="24" y="24" width="876" height="672" rx="14" fill="#f6f9fd" stroke="#3563a8" stroke-width="2"/>
+<text x="48" y="60" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start" fill="#1f2430">Node 4 (1,1): one MPI process</text>
+<text x="48" y="86" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="start" fill="#5d6577">#pragma omp parallel num_threads(k + 1)   ·   k = 6 ports shown</text>
+<text x="48" y="126" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">Port threads 1 … k: each cycle, free → in use with p = 0.6, in use → free with p = 0.3</text>
+<rect x="54" y="142" width="122" height="66" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="115.0" y="167.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">thread 1</text>
+<text x="115.0" y="189.3" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">port 0</text>
+<polyline points="115,210 115,294" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<rect x="188" y="142" width="122" height="66" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="249.0" y="167.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">thread 2</text>
+<text x="249.0" y="189.3" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">port 1</text>
+<polyline points="249,210 249,294" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<rect x="322" y="142" width="122" height="66" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="383.0" y="167.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">thread 3</text>
+<text x="383.0" y="189.3" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">port 2</text>
+<polyline points="383,210 383,294" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<rect x="456" y="142" width="122" height="66" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="517.0" y="167.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">thread 4</text>
+<text x="517.0" y="189.3" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">port 3</text>
+<polyline points="517,210 517,294" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<rect x="590" y="142" width="122" height="66" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="651.0" y="167.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">thread 5</text>
+<text x="651.0" y="189.3" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">port 4</text>
+<polyline points="651,210 651,294" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<rect x="724" y="142" width="122" height="66" rx="10" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="785.0" y="167.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">thread 6</text>
+<text x="785.0" y="189.3" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#1f2430">port 5</text>
+<polyline points="785,210 785,294" fill="none" stroke="#2f7d4a" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-green)"/>
+<rect x="189.2" y="240.0" width="525.6" height="24" rx="12.0" fill="#ffffff" stroke="none"/>
+<text x="452" y="257.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#1f2430">each thread writes only its own slot  ·  #pragma omp atomic write</text>
+<rect x="48" y="296" width="134" height="56" rx="0" fill="#e4f3e9" stroke="#1f2430" stroke-width="1.5"/>
+<text x="115" y="322" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="20" font-weight="700" text-anchor="middle" fill="#1f2430">1</text>
+<text x="115" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">in use</text>
+<rect x="182" y="296" width="134" height="56" rx="0" fill="#ffffff" stroke="#1f2430" stroke-width="1.5"/>
+<text x="249" y="322" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="20" font-weight="700" text-anchor="middle" fill="#1f2430">0</text>
+<text x="249" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">free</text>
+<rect x="316" y="296" width="134" height="56" rx="0" fill="#e4f3e9" stroke="#1f2430" stroke-width="1.5"/>
+<text x="383" y="322" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="20" font-weight="700" text-anchor="middle" fill="#1f2430">1</text>
+<text x="383" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">in use</text>
+<rect x="450" y="296" width="134" height="56" rx="0" fill="#e4f3e9" stroke="#1f2430" stroke-width="1.5"/>
+<text x="517" y="322" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="20" font-weight="700" text-anchor="middle" fill="#1f2430">1</text>
+<text x="517" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">in use</text>
+<rect x="584" y="296" width="134" height="56" rx="0" fill="#ffffff" stroke="#1f2430" stroke-width="1.5"/>
+<text x="651" y="322" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="20" font-weight="700" text-anchor="middle" fill="#1f2430">0</text>
+<text x="651" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">free</text>
+<rect x="718" y="296" width="134" height="56" rx="0" fill="#e4f3e9" stroke="#1f2430" stroke-width="1.5"/>
+<text x="785" y="322" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="20" font-weight="700" text-anchor="middle" fill="#1f2430">1</text>
+<text x="785" y="342" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">in use</text>
+<rect x="48" y="296" width="804" height="56" rx="0" fill="none" stroke="#1f2430" stroke-width="2.5"/>
+<text x="48" y="380" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="16" font-weight="700" text-anchor="start" fill="#1f2430">port_in_use[k]</text>
+<text x="196" y="380" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#5d6577">shared by all k + 1 threads of this node</text>
+<polyline points="651,354 651,428" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="638" y="408" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="end" fill="#1f2430">atomic read of every slot → free ports</text>
+<rect x="372" y="430" width="480" height="240" rx="10" fill="#d9e5f7" stroke="#3563a8" stroke-width="2.5"/>
+<text x="392" y="462" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#1f2430">thread 0: control thread</text>
+<text x="392" y="486" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">the only thread that calls MPI (MPI_THREAD_FUNNELED)</text>
+<text x="392" y="522" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">• each cycle: count free ports, save to history</text>
+<text x="392" y="548" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">• free ≤ threshold → NBR_REQ to every neighbour</text>
+<text x="392" y="574" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">• all neighbours full → one REPORT to base station</text>
+<text x="392" y="600" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">• receives with MPI_Iprobe + MPI_Recv, never waits</text>
+<text x="392" y="626" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">• sends with MPI_Isend from a buffer pool</text>
+<text x="392" y="652" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">• on FINAL: stops the port threads</text>
+<rect x="48" y="430" width="280" height="240" rx="10" fill="#f2f3f6" stroke="#7d8597" stroke-width="2"/>
+<text x="68" y="462" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="17" font-weight="700" text-anchor="start" fill="#1f2430">history[256]</text>
+<text x="68" y="486" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#5d6577">ring buffer, like Table 1</text>
+<text x="68" y="522" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#5d6577">time</text>
+<text x="300" y="522" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="end" fill="#5d6577">free ports</text>
+<text x="68" y="550" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">10:07:10</text>
+<text x="300" y="550" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="end" fill="#1f2430">1</text>
+<text x="68" y="576" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">10:07:20</text>
+<text x="300" y="576" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="end" fill="#1f2430">6</text>
+<text x="68" y="602" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">10:07:30</text>
+<text x="300" y="602" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="end" fill="#1f2430">5</text>
+<text x="68" y="628" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">10:07:40</text>
+<text x="300" y="628" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="end" fill="#1f2430">2</text>
+<text x="68" y="654" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="start" fill="#1f2430">10:07:50</text>
+<text x="300" y="654" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="15" font-weight="400" text-anchor="end" fill="#1f2430">1</text>
+<polyline points="372,560 330,560" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="351" y="550" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle" fill="#5d6577">saves</text>
+<rect x="990" y="300" width="266" height="120" rx="10" fill="#eaf1fb" stroke="#3563a8" stroke-width="2"/>
+<text x="1123.0" y="347.6" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Neighbours (2–4)</text>
+<text x="1123.0" y="366.9" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">found with MPI_Cart_shift</text>
+<text x="1123.0" y="385.5" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="middle" fill="#3563a8">⇄ NBR_REQ, NBR_RESP</text>
+<polyline points="854,460 940,460 940,360 988,360" fill="none" stroke="#3563a8" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-blue)" marker-start="url(#ah-blue)"/>
+<rect x="990" y="500" width="266" height="140" rx="10" fill="#fff1e0" stroke="#b4600e" stroke-width="2"/>
+<text x="1123.0" y="547.5" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#1f2430">Base station</text>
+<text x="1123.0" y="567.8" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="middle" fill="#b4600e">→ REPORT, TERM_ACK</text>
+<text x="1123.0" y="586.7" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="middle" fill="#b4600e">← BASE_REPLY,</text>
+<text x="1123.0" y="605.6" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="14" font-weight="400" text-anchor="middle" fill="#b4600e">   TERMINATE, FINAL</text>
+<polyline points="854,570 988,570" fill="none" stroke="#b4600e" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-amber)" marker-start="url(#ah-amber)"/>
+</svg>
