@@ -2,3 +2,4 @@ wsn
 *.o
 *.log
 !sample_logs/*.log
+__pycache__/
