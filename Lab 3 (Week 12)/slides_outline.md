@@ -91,7 +91,7 @@ while not FINAL:
 - But Open MPI busy-waits: 99% CPU vs ~2.5%
 - Default = poll: latency tunable with `-i`, CPU stays free
 
-## 14. Task 3: Analysis  *(section slide)*
+## 14. Task 3: Analysis  *(section slide; slides 14-16 are Julia's, see HANDOVER_task3.md)*
 
 ## 15. Method
 - Round trips timed on one clock (no clock sync): neighbour, report, terminate
@@ -101,11 +101,11 @@ while not FINAL:
 
 ## 16. Delay vs grid size and line length
 *Image: `task3_grid_vs_line.png`*
-- TASK3_FINDINGS
+- *Julia: answer a) and b) here from the graphs (2-3 bullets)*
 
 ## 17. Window test
 *Image: `window_replies.png`*
-- WINDOW_FINDINGS
+- *To fill in after running `bench/sweep_window.sh`: how w changes the split of replies*
 
 ## 18. Issues, limitations & future work
 - Oversubscribed runs: CPU contention inflates delay (CAAS is more realistic)

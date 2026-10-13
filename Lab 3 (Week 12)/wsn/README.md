@@ -173,8 +173,7 @@ to 1 ms on each side). Three message pairs are timed: `NBR_REQ -> NBR_RESP` and
 `REPORT -> BASE_REPLY` on the node's clock, and `TERMINATE -> TERM_ACK` on the base station's.
 Each is a round trip, so one-way delay is about half.
 
-`results/trial/task3` and `results/trial/window` are short trial runs (1-2 repeats, shorter runs)
-from the 4-core cloud container, made to check the scripts.
+Task 3 is Julia's: see `../HANDOVER_task3.md`.
 
 ## Running on CAAS
 
