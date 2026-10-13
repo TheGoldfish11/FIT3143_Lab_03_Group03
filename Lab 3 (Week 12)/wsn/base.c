@@ -1,8 +1,15 @@
 // FIT3143 Lab 3 - Task 2: base station
 //
-// A single MPI process with a single thread. It polls for reports with MPI_Iprobe, works out
-// the nearest available nodes for each report, logs everything, and at the end of the
-// simulation runs the two-phase shutdown (TERMINATE -> TERM_ACK from every node -> FINAL).
+// A single MPI process with a single thread. It receives reports, works out the nearest
+// available nodes for each report, logs everything, and at the end of the simulation runs the
+// two-phase shutdown (TERMINATE -> TERM_ACK from every node -> FINAL).
+//
+// Three versions of how messages are received (-b), compared in the benchmark:
+//   poll  - MPI_Iprobe, then MPI_Recv of what it found; sleeps poll_us when nothing is waiting
+//   block - MPI_Probe waits for the next message; replies with blocking MPI_Send. It cannot
+//           check the clock while waiting, so node 0 sends TIME_UP when the duration is over
+//   irecv - one MPI_Irecv per message type is posted in advance and checked with MPI_Testany,
+//           so a message can land straight in its buffer; sleeps poll_us when nothing is done
 
 #include "wsn.h"
 
@@ -11,7 +18,7 @@
 #include <string.h>
 
 static const char *TAG_NAMES[NUM_TAGS] = {
-    "", "NBR_REQ", "NBR_RESP", "REPORT", "BASE_REPLY", "TERMINATE", "TERM_ACK", "FINAL"
+    "", "NBR_REQ", "NBR_RESP", "REPORT", "BASE_REPLY", "TERMINATE", "TERM_ACK", "FINAL", "TIME_UP"
 };
 
 typedef struct {
@@ -29,6 +36,18 @@ typedef struct {
 
     node_stats_t *node_stats;   // filled in from each node's TERM_ACK
     int           acks;
+    int           time_up;      // main phase over (own clock, or TIME_UP in the blocking version)
+
+    // irecv version: receives posted in advance, one per message type
+    MPI_Request   rreq[2];
+    report_t      rep_buf;
+    node_stats_t  ack_buf;
+
+    // version comparison
+    long   idle_wakeups;        // polls that found nothing (always 0 when blocking)
+    double t_main_end;          // when the main phase ended
+    double t_final;             // when FINAL had gone to every node
+    double cpu_start;
 
     int    alerts;
     int    replies_with_nodes;
@@ -98,8 +117,8 @@ static void handle_report(base_t *b, const report_t *rep, int source) {
     else b->replies_none++;
 
     reply.base_proc_s = MPI_Wtime() - t0;
-    pool_isend(&b->pool, &reply, sizeof(reply), b->types->base_reply, source,
-               TAG_BASE_REPLY, MPI_COMM_WORLD);
+    msg_send(&b->pool, b->cfg->base_mode == BASE_BLOCK, &reply, sizeof(reply),
+             b->types->base_reply, source, TAG_BASE_REPLY, MPI_COMM_WORLD);
     b->sent[TAG_BASE_REPLY]++;
 
     // log entry
@@ -120,7 +139,9 @@ static void handle_report(base_t *b, const report_t *rep, int source) {
     }
     fprintf(f, "\nNeighbour msgs  : %d messages, %d bytes\n",
             rep->msgs_exchanged, rep->bytes_exchanged);
-    if (all_nbrs_reported) {
+    if (rep->n_nbrs == 0) {
+        fprintf(f, "Decision        : no other nodes in the grid\n");
+    } else if (all_nbrs_reported) {
         fprintf(f, "Decision        : all neighbours reported within %.1f s -> no nodes available nearby\n",
                 b->cfg->window_s);
     } else if (reply.n_candidates == 0) {
@@ -137,8 +158,36 @@ static void handle_report(base_t *b, const report_t *rep, int source) {
     }
 }
 
-// receives and handles every message that has already arrived, without blocking
-static int service_messages(base_t *b) {
+static void handle_ack(base_t *b, const node_stats_t *s, int source) {
+    b->node_stats[source] = *s;
+    b->acks++;
+}
+
+// receives one message that MPI_Iprobe or MPI_Probe found (poll and block versions)
+static void receive_found(base_t *b, MPI_Status *st) {
+    b->recv[st->MPI_TAG]++;
+
+    if (st->MPI_TAG == TAG_REPORT) {
+        report_t rep;
+        MPI_Recv(&rep, 1, b->types->report, st->MPI_SOURCE, TAG_REPORT,
+                 MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        handle_report(b, &rep, st->MPI_SOURCE);
+    } else if (st->MPI_TAG == TAG_TERM_ACK) {
+        node_stats_t s;
+        MPI_Recv(&s, 1, b->types->node_stats, st->MPI_SOURCE, TAG_TERM_ACK,
+                 MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        handle_ack(b, &s, st->MPI_SOURCE);
+    } else if (st->MPI_TAG == TAG_TIME_UP) {
+        MPI_Recv(NULL, 0, MPI_INT, st->MPI_SOURCE, TAG_TIME_UP, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        b->time_up = 1;
+    } else {
+        fprintf(stderr, "[base] unexpected tag %d from %d\n", st->MPI_TAG, st->MPI_SOURCE);
+        MPI_Recv(NULL, 0, MPI_BYTE, st->MPI_SOURCE, st->MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+}
+
+// poll version: handles everything that has already arrived, without waiting
+static int service_poll(base_t *b) {
     int handled = 0;
     int flag;
     MPI_Status st;
@@ -146,43 +195,113 @@ static int service_messages(base_t *b) {
     MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &st);
     while (flag) {
         handled++;
-        b->recv[st.MPI_TAG]++;
-
-        if (st.MPI_TAG == TAG_REPORT) {
-            report_t rep;
-            MPI_Recv(&rep, 1, b->types->report, st.MPI_SOURCE, TAG_REPORT,
-                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            handle_report(b, &rep, st.MPI_SOURCE);
-        } else if (st.MPI_TAG == TAG_TERM_ACK) {
-            node_stats_t s;
-            MPI_Recv(&s, 1, b->types->node_stats, st.MPI_SOURCE, TAG_TERM_ACK,
-                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            b->node_stats[st.MPI_SOURCE] = s;
-            b->acks++;
-        } else {
-            fprintf(stderr, "[base] unexpected tag %d from %d\n", st.MPI_TAG, st.MPI_SOURCE);
-            MPI_Recv(NULL, 0, MPI_BYTE, st.MPI_SOURCE, st.MPI_TAG,
-                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        }
+        receive_found(b, &st);
         MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &st);
     }
     return handled;
 }
 
-static void broadcast_control(base_t *b, int tag) {
-    MPI_Request *reqs = malloc(sizeof(MPI_Request) * (size_t)b->num_nodes);
-    for (int i = 0; i < b->num_nodes; i++) {
-        MPI_Isend(NULL, 0, MPI_INT, i, tag, MPI_COMM_WORLD, &reqs[i]);
-    }
-    MPI_Waitall(b->num_nodes, reqs, MPI_STATUSES_IGNORE);
-    b->sent[tag] += b->num_nodes;
-    free(reqs);
+// block version: waits for the next message, whatever it is
+static int service_block(base_t *b) {
+    MPI_Status st;
+    MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &st);
+    receive_found(b, &st);
+    return 1;
 }
 
-static void write_summary(base_t *b, double sim_time) {
+static void post_irecv(base_t *b, int i) {
+    if (i == 0) {
+        MPI_Irecv(&b->rep_buf, 1, b->types->report, MPI_ANY_SOURCE, TAG_REPORT,
+                  MPI_COMM_WORLD, &b->rreq[0]);
+    } else {
+        MPI_Irecv(&b->ack_buf, 1, b->types->node_stats, MPI_ANY_SOURCE, TAG_TERM_ACK,
+                  MPI_COMM_WORLD, &b->rreq[1]);
+    }
+}
+
+// irecv version: handles every posted receive that has completed, re-posting each one
+static int service_irecv(base_t *b) {
+    int handled = 0;
+    int idx, flag;
+    MPI_Status st;
+
+    MPI_Testany(2, b->rreq, &idx, &flag, &st);
+    while (flag && idx != MPI_UNDEFINED) {
+        handled++;
+        b->recv[st.MPI_TAG]++;
+        if (idx == 0) {
+            report_t rep = b->rep_buf;   // copy out before the buffer is re-posted
+            post_irecv(b, 0);
+            handle_report(b, &rep, st.MPI_SOURCE);
+        } else {
+            node_stats_t s = b->ack_buf;
+            post_irecv(b, 1);
+            handle_ack(b, &s, st.MPI_SOURCE);
+        }
+        MPI_Testany(2, b->rreq, &idx, &flag, &st);
+    }
+    return handled;
+}
+
+static int service(base_t *b) {
+    switch (b->cfg->base_mode) {
+        case BASE_BLOCK: return service_block(b);
+        case BASE_IRECV: return service_irecv(b);
+        default:         return service_poll(b);
+    }
+}
+
+static void broadcast_control(base_t *b, int tag) {
+    if (b->cfg->base_mode == BASE_BLOCK) {
+        for (int i = 0; i < b->num_nodes; i++) {
+            MPI_Send(NULL, 0, MPI_INT, i, tag, MPI_COMM_WORLD);
+        }
+    } else {
+        MPI_Request *reqs = malloc(sizeof(MPI_Request) * (size_t)b->num_nodes);
+        for (int i = 0; i < b->num_nodes; i++) {
+            MPI_Isend(NULL, 0, MPI_INT, i, tag, MPI_COMM_WORLD, &reqs[i]);
+        }
+        MPI_Waitall(b->num_nodes, reqs, MPI_STATUSES_IGNORE);
+        free(reqs);
+    }
+    b->sent[tag] += b->num_nodes;
+}
+
+// one row per run, so many runs (versions, grid sizes) can be compared in a spreadsheet or plot
+static void write_csv(const base_t *b, double sim_time, long total_msgs, long nbr_msgs, int events,
+                      int redirects, const rtt_stat_t *nbr_rtt, const rtt_stat_t *rep_rtt,
+                      double base_cpu, double node_cpu_avg) {
+    const config_t *c = b->cfg;
+    FILE *f = fopen(c->csv_path, "a");
+    if (!f) {
+        fprintf(stderr, "[base] could not open %s\n", c->csv_path);
+        return;
+    }
+    if (ftell(f) == 0) {
+        fprintf(f, "m,n,nodes,k,threshold,cycle_ms,duration_s,window_s,poll_us,seed,base_mode,node_mode,"
+                   "sim_time_s,main_overrun_s,shutdown_s,alerts,replies_nodes,replies_none,events,"
+                   "redirects,total_msgs,nbr_msgs,nbr_rtt_n,nbr_rtt_avg_s,nbr_rtt_min_s,nbr_rtt_max_s,"
+                   "report_rtt_n,report_rtt_avg_s,report_rtt_min_s,report_rtt_max_s,base_cpu_s,"
+                   "base_idle_wakeups,node_ctrl_cpu_avg_s\n");
+    }
+    fprintf(f, "%d,%d,%d,%d,%d,%d,%.3f,%.3f,%d,%u,%s,%s,", c->m, c->n, b->num_nodes, c->k,
+            c->threshold, c->cycle_ms, c->duration_s, c->window_s, c->poll_us, c->seed,
+            base_mode_name(c->base_mode), node_mode_name(c->node_mode));
+    fprintf(f, "%.6f,%.6f,%.6f,%d,%d,%d,%d,%d,%ld,%ld,", sim_time,
+            b->t_main_end - b->t_start - c->duration_s, b->t_final - b->t_main_end, b->alerts,
+            b->replies_with_nodes, b->replies_none, events, redirects, total_msgs, nbr_msgs);
+    fprintf(f, "%d,%.9f,%.9f,%.9f,%d,%.9f,%.9f,%.9f,%.6f,%ld,%.6f\n",
+            nbr_rtt->count, nbr_rtt->count ? nbr_rtt->sum / nbr_rtt->count : 0.0, nbr_rtt->min,
+            nbr_rtt->max, rep_rtt->count, rep_rtt->count ? rep_rtt->sum / rep_rtt->count : 0.0,
+            rep_rtt->min, rep_rtt->max, base_cpu, b->idle_wakeups, node_cpu_avg);
+    fclose(f);
+}
+
+static void write_summary(base_t *b, double sim_time, double base_cpu) {
     FILE *f = b->log;
     long nbr_msgs = 0;
     int events = 0, redirects = 0;
+    double node_cpu = 0;
     rtt_stat_t nbr_rtt = {0}, rep_rtt = {0};
 
     for (int i = 0; i < b->num_nodes; i++) {
@@ -190,6 +309,7 @@ static void write_summary(base_t *b, double sim_time) {
         nbr_msgs += s->sent[TAG_NBR_REQ] + s->sent[TAG_NBR_RESP];
         events += s->congestion_events;
         redirects += s->redirects;
+        node_cpu += s->ctrl_cpu_s;
         if (s->nbr_rtt.count) {
             if (nbr_rtt.count == 0 || s->nbr_rtt.min < nbr_rtt.min) nbr_rtt.min = s->nbr_rtt.min;
             if (s->nbr_rtt.max > nbr_rtt.max) nbr_rtt.max = s->nbr_rtt.max;
@@ -209,16 +329,21 @@ static void write_summary(base_t *b, double sim_time) {
         base_recv += b->recv[t];
         base_sent += b->sent[t];
     }
+    long total_msgs = nbr_msgs + base_recv + base_sent;
+    double node_cpu_avg = node_cpu / b->num_nodes;
 
     fprintf(f, "============================================================\n");
     fprintf(f, "SUMMARY\n");
-    fprintf(f, "Simulation time         : %.3f s\n", sim_time);
+    fprintf(f, "Versions                : base station %s, nodes %s\n",
+            base_mode_name(b->cfg->base_mode), node_mode_name(b->cfg->node_mode));
+    fprintf(f, "Simulation time         : %.3f s (main phase ended %+.3f s from -d, shutdown %.3f s)\n",
+            sim_time, b->t_main_end - b->t_start - b->cfg->duration_s, b->t_final - b->t_main_end);
     fprintf(f, "Congestion events       : %d (nodes at or below threshold)\n", events);
     fprintf(f, "Redirected to neighbour : %d\n", redirects);
     fprintf(f, "Alerts to base station  : %d (%d with nearest nodes, %d none nearby)\n",
             b->alerts, b->replies_with_nodes, b->replies_none);
     fprintf(f, "Total messages          : %ld (%ld node<->node, %ld to base, %ld from base)\n",
-            nbr_msgs + base_recv + base_sent, nbr_msgs, base_recv, base_sent);
+            total_msgs, nbr_msgs, base_recv, base_sent);
     fprintf(f, "Messages by type        :\n");
     for (int t = 1; t < NUM_TAGS; t++) {
         long count = b->recv[t] + b->sent[t];
@@ -233,6 +358,8 @@ static void write_summary(base_t *b, double sim_time) {
             nbr_rtt.count ? nbr_rtt.sum / nbr_rtt.count : 0.0, nbr_rtt.min, nbr_rtt.max);
     fprintf(f, "  REPORT  -> BASE_REPLY   %9d %10.6f %10.6f %10.6f\n", rep_rtt.count,
             rep_rtt.count ? rep_rtt.sum / rep_rtt.count : 0.0, rep_rtt.min, rep_rtt.max);
+    fprintf(f, "CPU time                : base station %.3f s (%ld idle polls), "
+               "node MPI thread %.3f s on average\n", base_cpu, b->idle_wakeups, node_cpu_avg);
     fprintf(f, "Per node                : node  (x,y)  events redirects reports\n");
     for (int i = 0; i < b->num_nodes; i++) {
         node_stats_t *s = &b->node_stats[i];
@@ -243,7 +370,12 @@ static void write_summary(base_t *b, double sim_time) {
     printf("[base] %dx%d grid, %.2f s: %d alerts (%d with nodes, %d none nearby), "
            "%ld messages, log written to %s\n",
            b->cfg->m, b->cfg->n, sim_time, b->alerts, b->replies_with_nodes, b->replies_none,
-           nbr_msgs + base_recv + base_sent, b->cfg->log_path);
+           total_msgs, b->cfg->log_path);
+
+    if (b->cfg->csv_path[0]) {
+        write_csv(b, sim_time, total_msgs, nbr_msgs, events, redirects, &nbr_rtt, &rep_rtt,
+                  base_cpu, node_cpu_avg);
+    }
 }
 
 void run_base(const config_t *cfg, const wsn_types_t *types) {
@@ -277,22 +409,47 @@ void run_base(const config_t *cfg, const wsn_types_t *types) {
                    "duration=%.1f s, window=%.1f s, p_arrive=%.2f, p_depart=%.2f, poll=%d us, seed=%u\n",
             cfg->m, cfg->n, b.num_nodes, cfg->k, cfg->threshold, cfg->cycle_ms, cfg->duration_s,
             cfg->window_s, cfg->p_arrive, cfg->p_depart, cfg->poll_us, cfg->seed);
+    fprintf(b.log, "Versions: base station %s, nodes %s\n",
+            base_mode_name(cfg->base_mode), node_mode_name(cfg->node_mode));
+
+    if (cfg->base_mode == BASE_IRECV) {
+        post_irecv(&b, 0);
+        post_irecv(&b, 1);
+    }
 
     b.t_start = MPI_Wtime();
-    while (MPI_Wtime() - b.t_start < cfg->duration_s) {
-        if (!service_messages(&b)) sleep_us(cfg->poll_us);
+    b.cpu_start = thread_cpu_s();
+    while (!b.time_up) {
+        if (!service(&b)) {
+            b.idle_wakeups++;
+            sleep_us(cfg->poll_us);
+        }
+        if (MPI_Wtime() - b.t_start >= cfg->duration_s) b.time_up = 1;
     }
+    b.t_main_end = MPI_Wtime();
 
     // phase 1: nodes stop starting incidents; keep answering reports until everyone acks
     broadcast_control(&b, TAG_TERMINATE);
     while (b.acks < b.num_nodes) {
-        if (!service_messages(&b)) sleep_us(cfg->poll_us);
+        if (!service(&b)) {
+            b.idle_wakeups++;
+            sleep_us(cfg->poll_us);
+        }
     }
     // phase 2: no node can send anything new now, so everyone can exit
     broadcast_control(&b, TAG_FINAL);
     pool_wait_all(&b.pool);
+    b.t_final = MPI_Wtime();
 
-    write_summary(&b, MPI_Wtime() - b.t_start);
+    // the irecv version still has a receive posted for each message type; cancel them
+    if (cfg->base_mode == BASE_IRECV) {
+        for (int i = 0; i < 2; i++) {
+            MPI_Cancel(&b.rreq[i]);
+            MPI_Wait(&b.rreq[i], MPI_STATUS_IGNORE);
+        }
+    }
+
+    write_summary(&b, b.t_final - b.t_start, thread_cpu_s() - b.cpu_start);
 
     fclose(b.log);
     free(b.last_report);

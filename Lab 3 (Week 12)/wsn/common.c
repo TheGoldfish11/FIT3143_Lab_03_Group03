@@ -21,8 +21,25 @@ static void usage(const char *prog) {
         "  -i <us>         MPI_Iprobe polling interval in us  (default 1000)\n"
         "  -s <seed>       random seed                        (default time)\n"
         "  -o <file>       base station log file              (default base_station.log)\n"
+        "  -C <file>       append a CSV summary row to file   (default off)\n"
+        "  -b <version>    base station: poll, block, irecv   (default poll)\n"
+        "  -N <version>    nodes: nonblock, block             (default nonblock)\n"
         "  -v              print every node event\n",
         prog, MAX_PORTS);
+}
+
+static const char *BASE_MODES[] = {"poll", "block", "irecv"};
+static const char *NODE_MODES[] = {"nonblock", "block"};
+
+const char *base_mode_name(int mode) { return BASE_MODES[mode]; }
+const char *node_mode_name(int mode) { return NODE_MODES[mode]; }
+
+// returns the index of name in names, or -1
+static int lookup(const char *name, const char **names, int count) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(name, names[i]) == 0) return i;
+    }
+    return -1;
 }
 
 // every rank parses the same argv, so no broadcast is needed
@@ -39,10 +56,13 @@ int parse_args(int argc, char **argv, config_t *cfg, int rank) {
     cfg->poll_us = 1000;
     cfg->seed = (unsigned int)time(NULL);
     cfg->verbose = 0;
+    cfg->base_mode = BASE_POLL;
+    cfg->node_mode = NODE_NONBLOCK;
     strcpy(cfg->log_path, "base_station.log");
+    cfg->csv_path[0] = '\0';
 
     int opt;
-    while ((opt = getopt(argc, argv, "m:n:k:t:c:d:w:a:r:i:s:o:v")) != -1) {
+    while ((opt = getopt(argc, argv, "m:n:k:t:c:d:w:a:r:i:s:o:C:b:N:v")) != -1) {
         switch (opt) {
             case 'm': cfg->m = atoi(optarg); break;
             case 'n': cfg->n = atoi(optarg); break;
@@ -59,6 +79,16 @@ int parse_args(int argc, char **argv, config_t *cfg, int rank) {
                 strncpy(cfg->log_path, optarg, sizeof(cfg->log_path) - 1);
                 cfg->log_path[sizeof(cfg->log_path) - 1] = '\0';
                 break;
+            case 'C':
+                strncpy(cfg->csv_path, optarg, sizeof(cfg->csv_path) - 1);
+                cfg->csv_path[sizeof(cfg->csv_path) - 1] = '\0';
+                break;
+            case 'b':
+                cfg->base_mode = lookup(optarg, BASE_MODES, 3);
+                break;
+            case 'N':
+                cfg->node_mode = lookup(optarg, NODE_MODES, 2);
+                break;
             case 'v': cfg->verbose = 1; break;
             default:
                 if (rank == 0) usage(argv[0]);
@@ -68,7 +98,8 @@ int parse_args(int argc, char **argv, config_t *cfg, int rank) {
 
     if (cfg->m < 1 || cfg->n < 1 || cfg->k < 1 || cfg->k > MAX_PORTS ||
         cfg->threshold < 0 || cfg->threshold >= cfg->k || cfg->cycle_ms < 1 ||
-        cfg->duration_s <= 0 || cfg->window_s < 0 || cfg->poll_us < 0) {
+        cfg->duration_s <= 0 || cfg->window_s < 0 || cfg->poll_us < 0 ||
+        cfg->base_mode < 0 || cfg->node_mode < 0) {
         if (rank == 0) usage(argv[0]);
         return 0;
     }
@@ -114,14 +145,15 @@ void create_types(wsn_types_t *t) {
         make_struct(2, bl, d, ty, sizeof(base_reply_t), &t->base_reply);
     }
     {
-        int          bl[] = {1 + 2 * NUM_TAGS + 4, 1, 3, 1, 3};
+        int          bl[] = {1 + 2 * NUM_TAGS + 4, 1, 3, 1, 3, 1};
         MPI_Aint     d[]  = {offsetof(node_stats_t, node_id),
                              offsetof(node_stats_t, nbr_rtt.count),
                              offsetof(node_stats_t, nbr_rtt.sum),
                              offsetof(node_stats_t, report_rtt.count),
-                             offsetof(node_stats_t, report_rtt.sum)};
-        MPI_Datatype ty[] = {MPI_INT, MPI_INT, MPI_DOUBLE, MPI_INT, MPI_DOUBLE};
-        make_struct(5, bl, d, ty, sizeof(node_stats_t), &t->node_stats);
+                             offsetof(node_stats_t, report_rtt.sum),
+                             offsetof(node_stats_t, ctrl_cpu_s)};
+        MPI_Datatype ty[] = {MPI_INT, MPI_INT, MPI_DOUBLE, MPI_INT, MPI_DOUBLE, MPI_DOUBLE};
+        make_struct(6, bl, d, ty, sizeof(node_stats_t), &t->node_stats);
     }
 }
 
@@ -164,6 +196,17 @@ int pool_isend(send_pool_t *p, const void *msg, size_t len, MPI_Datatype type,
     return bytes;
 }
 
+// blocking versions send straight from msg with MPI_Send; the others go through the pool
+int msg_send(send_pool_t *p, int blocking, const void *msg, size_t len, MPI_Datatype type,
+             int dest, int tag, MPI_Comm comm) {
+    if (!blocking) return pool_isend(p, msg, len, type, dest, tag, comm);
+
+    MPI_Send(msg, 1, type, dest, tag, comm);
+    int bytes;
+    MPI_Type_size(type, &bytes);
+    return bytes;
+}
+
 void pool_wait_all(send_pool_t *p) {
     MPI_Waitall(SEND_POOL_SIZE, p->req, MPI_STATUSES_IGNORE);
 }
@@ -185,4 +228,17 @@ void sleep_us(long us) {
     if (us <= 0) return;
     struct timespec ts = {us / 1000000, (us % 1000000) * 1000};
     nanosleep(&ts, NULL);
+}
+
+// CPU time (not wall time) used so far by the calling thread / the whole process
+double thread_cpu_s(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts);
+    return ts.tv_sec + ts.tv_nsec / 1e9;
+}
+
+double process_cpu_s(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+    return ts.tv_sec + ts.tv_nsec / 1e9;
 }

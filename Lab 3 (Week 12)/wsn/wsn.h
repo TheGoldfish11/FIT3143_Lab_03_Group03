@@ -25,7 +25,21 @@ enum {
     TAG_TERMINATE,       // base -> node: stop starting new work, then ack
     TAG_TERM_ACK,        // node -> base: stopped, carries the node's message statistics
     TAG_FINAL,           // base -> node: everyone has stopped, safe to exit
+    TAG_TIME_UP,         // node 0 -> base: duration reached (only with the blocking base station)
     NUM_TAGS
+};
+
+// base station versions (-b), compared in the benchmark
+enum {
+    BASE_POLL,           // MPI_Iprobe + MPI_Recv, sleep when idle (default)
+    BASE_BLOCK,          // blocking MPI_Probe + MPI_Recv, replies with MPI_Send
+    BASE_IRECV           // receives posted in advance with MPI_Irecv, checked with MPI_Testany
+};
+
+// charging node versions (-N)
+enum {
+    NODE_NONBLOCK,       // neighbour round is spread over loop passes, MPI_Isend (default)
+    NODE_BLOCK           // neighbour round runs to completion with MPI_Send + blocking MPI_Probe
 };
 
 // simulation parameters, parsed from the command line on every rank
@@ -41,7 +55,10 @@ typedef struct {
     int    poll_us;        // sleep between MPI_Iprobe polls
     unsigned int seed;
     int    verbose;
+    int    base_mode;      // BASE_POLL, BASE_BLOCK or BASE_IRECV
+    int    node_mode;      // NODE_NONBLOCK or NODE_BLOCK
     char   log_path[256];
+    char   csv_path[256];  // one summary row is appended here if set
 } config_t;
 
 // ---- message payloads (each sent as one MPI derived datatype) ----
@@ -97,6 +114,7 @@ typedef struct {
     int        reports;             // times all neighbours were full -> base station
     rtt_stat_t nbr_rtt;             // TAG_NBR_REQ -> TAG_NBR_RESP
     rtt_stat_t report_rtt;          // TAG_REPORT -> TAG_BASE_REPLY (minus base processing)
+    double     ctrl_cpu_s;          // CPU time used by thread 0 (the MPI thread)
 } node_stats_t;
 
 // MPI datatypes for the structs above, built once by create_types()
@@ -123,10 +141,16 @@ void   free_types(wsn_types_t *t);
 void   pool_init(send_pool_t *p);
 int    pool_isend(send_pool_t *p, const void *msg, size_t len, MPI_Datatype type,
                   int dest, int tag, MPI_Comm comm);
+int    msg_send(send_pool_t *p, int blocking, const void *msg, size_t len, MPI_Datatype type,
+                int dest, int tag, MPI_Comm comm);
 void   pool_wait_all(send_pool_t *p);
+const char *base_mode_name(int mode);
+const char *node_mode_name(int mode);
 void   format_timestamp(time_t t, char out[TIMESTAMP_LEN]);
 void   rtt_add(rtt_stat_t *s, double v);
 void   sleep_us(long us);
+double thread_cpu_s(void);
+double process_cpu_s(void);
 
 // node.c / base.c
 void   run_node(const config_t *cfg, MPI_Comm grid_comm, const wsn_types_t *types);

@@ -4,6 +4,12 @@
 //   thread 0      - the only thread that calls MPI (MPI_THREAD_FUNNELED): checks availability
 //                   every cycle, talks to neighbours and the base station
 //   threads 1..k  - one per charging port, each updating its own slot of the shared array
+//
+// Two versions of thread 0 (-N):
+//   nonblock - a neighbour round is spread over passes of the polling loop, sends use MPI_Isend
+//   block    - a neighbour round runs to completion: MPI_Send, then blocking MPI_Probe until all
+//              replies (and any base station reply) are in. While waiting it still answers
+//              other nodes' requests, otherwise two congested neighbours would deadlock.
 
 #include "wsn.h"
 
@@ -42,7 +48,16 @@ typedef struct {
     int         round_msgs, round_bytes;
     time_t      round_detected;
     int         awaiting_base;
+
+    // shutdown and timing
+    int         terminating, final;
+    int         time_up_sent;
+    double      t_start, cpu_start;
 } node_t;
+
+static void handle_message(node_t *nd, MPI_Status *st);
+static void finish_round(node_t *nd);
+static void wait_one(node_t *nd);
 
 static int availability(node_t *nd) {
     int free_ports = 0;
@@ -95,10 +110,11 @@ static void port_loop(node_t *nd, int port) {
 // ---- thread 0: congestion handling ----
 
 static void send_to(node_t *nd, const void *msg, size_t len, MPI_Datatype type, int dest, int tag) {
-    int bytes = pool_isend(&nd->pool, msg, len, type, dest, tag, MPI_COMM_WORLD);
+    int bytes = msg_send(&nd->pool, nd->cfg->node_mode == NODE_BLOCK, msg, len, type, dest, tag,
+                         MPI_COMM_WORLD);
     nd->stats.sent[tag]++;
     nd->stats.bytes_sent += bytes;
-    if (tag == TAG_NBR_REQ) {   // replies we receive are counted in service_messages
+    if (tag == TAG_NBR_REQ) {   // replies we receive are counted in handle_message
         nd->round_msgs++;
         nd->round_bytes += bytes;
     }
@@ -120,6 +136,13 @@ static void start_round(node_t *nd, int avail) {
     nbr_req_t req = {nd->id, MPI_Wtime()};
     for (int i = 0; i < nd->n_nbrs; i++) {
         send_to(nd, &req, sizeof(req), nd->types->nbr_req, nd->nbr[i], TAG_NBR_REQ);
+    }
+
+    if (nd->n_nbrs == 0) {
+        finish_round(nd);   // 1x1 grid: nobody to ask
+    } else if (nd->cfg->node_mode == NODE_BLOCK) {
+        // finish_round clears round_active once the last reply is handled
+        while (nd->round_active) wait_one(nd);
     }
 }
 
@@ -170,10 +193,80 @@ static void finish_round(node_t *nd) {
         printf("[node %d] all neighbours full, report #%d sent to base station\n",
                nd->id, rep.report_seq);
     }
+
+    if (nd->cfg->node_mode == NODE_BLOCK) {
+        while (nd->awaiting_base) wait_one(nd);
+    }
 }
 
-// receives and handles every message that has already arrived, without blocking
-static int service_messages(node_t *nd, int *terminating, int *final) {
+// receives one message that MPI_Iprobe or MPI_Probe found, and reacts to it
+static void handle_message(node_t *nd, MPI_Status *st) {
+    nd->stats.recv[st->MPI_TAG]++;
+
+    switch (st->MPI_TAG) {
+        case TAG_NBR_REQ: {
+            nbr_req_t req;
+            MPI_Recv(&req, 1, nd->types->nbr_req, st->MPI_SOURCE, TAG_NBR_REQ,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            nbr_resp_t resp = {nd->id, availability(nd), req.t_sent};
+            send_to(nd, &resp, sizeof(resp), nd->types->nbr_resp, st->MPI_SOURCE, TAG_NBR_RESP);
+            break;
+        }
+        case TAG_NBR_RESP: {
+            nbr_resp_t resp;
+            MPI_Recv(&resp, 1, nd->types->nbr_resp, st->MPI_SOURCE, TAG_NBR_RESP,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            rtt_add(&nd->stats.nbr_rtt, MPI_Wtime() - resp.t_req_sent);
+            int b;
+            MPI_Type_size(nd->types->nbr_resp, &b);
+            nd->round_msgs++;
+            nd->round_bytes += b;
+            for (int i = 0; i < nd->n_nbrs; i++) {
+                if (nd->nbr[i] == resp.node_id) nd->reply_avail[i] = resp.avail;
+            }
+            if (nd->round_active && --nd->replies_pending == 0) {
+                finish_round(nd);
+            }
+            break;
+        }
+        case TAG_BASE_REPLY: {
+            base_reply_t rep;
+            MPI_Recv(&rep, 1, nd->types->base_reply, st->MPI_SOURCE, TAG_BASE_REPLY,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            rtt_add(&nd->stats.report_rtt, MPI_Wtime() - rep.t_report_sent - rep.base_proc_s);
+            nd->awaiting_base = 0;
+            if (nd->cfg->verbose) {
+                if (rep.n_candidates == 0) {
+                    printf("[node %d] base station: no nodes available nearby\n", nd->id);
+                } else {
+                    printf("[node %d] base station: forwarding %d nearest node(s) to EVs:",
+                           nd->id, rep.n_candidates);
+                    for (int i = 0; i < rep.n_candidates; i++) printf(" %d", rep.cand_id[i]);
+                    printf("\n");
+                }
+            }
+            break;
+        }
+        case TAG_TERMINATE:
+            MPI_Recv(NULL, 0, MPI_INT, st->MPI_SOURCE, TAG_TERMINATE,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            nd->terminating = 1;
+            break;
+        case TAG_FINAL:
+            MPI_Recv(NULL, 0, MPI_INT, st->MPI_SOURCE, TAG_FINAL,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            nd->final = 1;
+            break;
+        default:
+            fprintf(stderr, "[node %d] unexpected tag %d from %d\n",
+                    nd->id, st->MPI_TAG, st->MPI_SOURCE);
+            MPI_Recv(NULL, 0, MPI_BYTE, st->MPI_SOURCE, st->MPI_TAG,
+                     MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+}
+
+// non-blocking version: handles every message that has already arrived, then returns
+static int service_messages(node_t *nd) {
     int handled = 0;
     int flag;
     MPI_Status st;
@@ -181,71 +274,18 @@ static int service_messages(node_t *nd, int *terminating, int *final) {
     MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &st);
     while (flag) {
         handled++;
-        nd->stats.recv[st.MPI_TAG]++;
-
-        switch (st.MPI_TAG) {
-            case TAG_NBR_REQ: {
-                nbr_req_t req;
-                MPI_Recv(&req, 1, nd->types->nbr_req, st.MPI_SOURCE, TAG_NBR_REQ,
-                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                nbr_resp_t resp = {nd->id, availability(nd), req.t_sent};
-                send_to(nd, &resp, sizeof(resp), nd->types->nbr_resp, st.MPI_SOURCE, TAG_NBR_RESP);
-                break;
-            }
-            case TAG_NBR_RESP: {
-                nbr_resp_t resp;
-                MPI_Recv(&resp, 1, nd->types->nbr_resp, st.MPI_SOURCE, TAG_NBR_RESP,
-                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                rtt_add(&nd->stats.nbr_rtt, MPI_Wtime() - resp.t_req_sent);
-                int b;
-                MPI_Type_size(nd->types->nbr_resp, &b);
-                nd->round_msgs++;
-                nd->round_bytes += b;
-                for (int i = 0; i < nd->n_nbrs; i++) {
-                    if (nd->nbr[i] == resp.node_id) nd->reply_avail[i] = resp.avail;
-                }
-                if (nd->round_active && --nd->replies_pending == 0) {
-                    finish_round(nd);
-                }
-                break;
-            }
-            case TAG_BASE_REPLY: {
-                base_reply_t rep;
-                MPI_Recv(&rep, 1, nd->types->base_reply, st.MPI_SOURCE, TAG_BASE_REPLY,
-                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                rtt_add(&nd->stats.report_rtt, MPI_Wtime() - rep.t_report_sent - rep.base_proc_s);
-                nd->awaiting_base = 0;
-                if (nd->cfg->verbose) {
-                    if (rep.n_candidates == 0) {
-                        printf("[node %d] base station: no nodes available nearby\n", nd->id);
-                    } else {
-                        printf("[node %d] base station: forwarding %d nearest node(s) to EVs:",
-                               nd->id, rep.n_candidates);
-                        for (int i = 0; i < rep.n_candidates; i++) printf(" %d", rep.cand_id[i]);
-                        printf("\n");
-                    }
-                }
-                break;
-            }
-            case TAG_TERMINATE:
-                MPI_Recv(NULL, 0, MPI_INT, st.MPI_SOURCE, TAG_TERMINATE,
-                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                *terminating = 1;
-                break;
-            case TAG_FINAL:
-                MPI_Recv(NULL, 0, MPI_INT, st.MPI_SOURCE, TAG_FINAL,
-                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                *final = 1;
-                break;
-            default:
-                fprintf(stderr, "[node %d] unexpected tag %d from %d\n",
-                        nd->id, st.MPI_TAG, st.MPI_SOURCE);
-                MPI_Recv(NULL, 0, MPI_BYTE, st.MPI_SOURCE, st.MPI_TAG,
-                         MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        }
+        handle_message(nd, &st);
         MPI_Iprobe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &flag, &st);
     }
     return handled;
+}
+
+// blocking version: waits (MPI_Probe) for the next message from anyone and handles it.
+// Handling every tag, not only the reply being waited for, is what avoids deadlock.
+static void wait_one(node_t *nd) {
+    MPI_Status st;
+    MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &st);
+    handle_message(nd, &st);
 }
 
 // Shutdown is two-phase so no message is left unreceived at MPI_Finalize:
@@ -255,14 +295,18 @@ static void control_loop(node_t *nd) {
     const config_t *cfg = nd->cfg;
     double cycle_s = cfg->cycle_ms / 1000.0;
     double next_tick = MPI_Wtime() + cycle_s;
-    int terminating = 0, acked = 0, final = 0;
+    int acked = 0;
 
-    while (!final) {
-        int handled = service_messages(nd, &terminating, &final);
+    nd->t_start = MPI_Wtime();
+    nd->cpu_start = thread_cpu_s();
+
+    while (!nd->final) {
+        int handled = service_messages(nd);
 
         double now = MPI_Wtime();
-        if (!terminating && now >= next_tick) {
+        if (!nd->terminating && now >= next_tick) {
             next_tick += cycle_s;
+            if (next_tick <= now) next_tick = now + cycle_s;   // fell behind (blocking round)
 
             int avail = availability(nd);
             snapshot_t *s = &nd->history[nd->history_count % HISTORY_LEN];
@@ -272,11 +316,20 @@ static void control_loop(node_t *nd) {
 
             if (avail <= cfg->threshold && !nd->round_active && !nd->awaiting_base) {
                 start_round(nd, avail);
-                if (nd->n_nbrs == 0) finish_round(nd);   // 1x1 grid
             }
         }
 
-        if (terminating && !acked && !nd->round_active) {
+        // a blocking base station cannot watch the clock while it waits in MPI_Probe,
+        // so node 0 wakes it with one empty message when the duration is up
+        if (cfg->base_mode == BASE_BLOCK && nd->id == 0 && !nd->time_up_sent &&
+            !nd->terminating && now - nd->t_start >= cfg->duration_s) {
+            MPI_Send(NULL, 0, MPI_INT, nd->base_rank, TAG_TIME_UP, MPI_COMM_WORLD);
+            nd->stats.sent[TAG_TIME_UP]++;
+            nd->time_up_sent = 1;
+        }
+
+        if (nd->terminating && !acked && !nd->round_active && !nd->awaiting_base) {
+            nd->stats.ctrl_cpu_s = thread_cpu_s() - nd->cpu_start;
             send_to(nd, &nd->stats, sizeof(nd->stats), nd->types->node_stats,
                     nd->base_rank, TAG_TERM_ACK);
             acked = 1;
