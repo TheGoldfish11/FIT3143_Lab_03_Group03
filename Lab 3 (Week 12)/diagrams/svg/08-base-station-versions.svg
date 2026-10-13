@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="The three base station versions on one timeline: polling versions check every poll interval and sleep between checks, the blocking version spins inside MPI_Probe and reacts at once but keeps a CPU core busy.">
+<defs><marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2430"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3563a8"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b4600e"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4a"/></marker><marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker><marker id="ah-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d8597"/></marker></defs>
+<rect width="1280" height="720" fill="#ffffff"/>
+<rect x="24" y="110" width="1232" height="150" rx="12" fill="#fffaf3" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="48" y="162" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="24" font-weight="700" text-anchor="start" fill="#1f2430">poll</text>
+<text x="48" y="190" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">MPI_Iprobe, then sleep -i</text>
+<rect x="330" y="150" width="670" height="60" rx="4" fill="#ffffff" stroke="#c9ced8" stroke-width="1"/>
+<rect x="330" y="150" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<rect x="464" y="150" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<rect x="598" y="150" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<rect x="866" y="150" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<text x="469" y="142" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="12" font-weight="400" text-anchor="middle" fill="#5d6577">Iprobe</text>
+<text x="531.0" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">sleep</text>
+<polyline points="638.2,224 732,224" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="632.2" y="229" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="end" fill="#5d6577">waits</text>
+<rect x="732" y="150" width="60.299999999999955" height="60" rx="3" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="762.2" y="186" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#2f7d4a">reply</text>
+<text x="1140" y="180.1" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1f2430">reacts within 1 poll interval</text>
+<text x="1140" y="199.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">idle CPU 2.6% (trial)</text>
+<rect x="24" y="300" width="1232" height="150" rx="12" fill="#fffaf3" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="48" y="352" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="24" font-weight="700" text-anchor="start" fill="#1f2430">block</text>
+<text x="48" y="380" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">MPI_Probe waits</text>
+<rect x="330" y="340" width="670" height="60" rx="4" fill="#ffffff" stroke="#c9ced8" stroke-width="1"/>
+<rect x="330" y="340" width="308.20000000000005" height="60" rx="3" fill="#fff1e0" stroke="#b4600e" stroke-width="1.5"/>
+<text x="484.1" y="376" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#b4600e">spinning inside MPI_Probe</text>
+<rect x="638.2" y="340" width="60.299999999999955" height="60" rx="3" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="668.3" y="376" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#2f7d4a">reply</text>
+<rect x="698.5" y="340" width="301.5" height="60" rx="3" fill="#fff1e0" stroke="#b4600e" stroke-width="1.5"/>
+<text x="832.5" y="376" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#b4600e">spinning</text>
+<text x="1140" y="351.2" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1f2430">reacts at once</text>
+<text x="1140" y="370.1" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">idle CPU 99%: Open MPI</text>
+<text x="1140" y="389.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">busy-waits inside MPI_Probe</text>
+<text x="1140" y="407.9" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">needs TIME_UP to end</text>
+<rect x="24" y="490" width="1232" height="150" rx="12" fill="#fffaf3" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="48" y="542" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="24" font-weight="700" text-anchor="start" fill="#1f2430">irecv</text>
+<text x="48" y="570" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">MPI_Irecv posted, MPI_Testany</text>
+<rect x="330" y="530" width="670" height="60" rx="4" fill="#ffffff" stroke="#c9ced8" stroke-width="1"/>
+<rect x="330" y="530" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<rect x="464" y="530" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<rect x="598" y="530" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<rect x="866" y="530" width="10" height="60" rx="2" fill="#b4600e" stroke="#b4600e" stroke-width="1"/>
+<text x="469" y="522" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="12" font-weight="400" text-anchor="middle" fill="#5d6577">Testany</text>
+<text x="531.0" y="566" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">sleep</text>
+<polyline points="638.2,604 732,604" fill="none" stroke="#1f2430" stroke-width="2" stroke-linejoin="round" marker-end="url(#ah-ink)"/>
+<text x="632.2" y="609" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="400" text-anchor="end" fill="#5d6577">waits</text>
+<rect x="732" y="530" width="60.299999999999955" height="60" rx="3" fill="#e4f3e9" stroke="#2f7d4a" stroke-width="2"/>
+<text x="762.2" y="566" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="#2f7d4a">reply</text>
+<text x="1140" y="541.2" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#1f2430">reacts within 1 poll interval</text>
+<text x="1140" y="560.1" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">idle CPU 2.4% (trial)</text>
+<text x="1140" y="579.0" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">report lands straight</text>
+<text x="1140" y="597.9" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="14" font-weight="400" text-anchor="middle" fill="#5d6577">in the posted buffer</text>
+<line x1="638.2" y1="74" x2="638.2" y2="652" stroke="#1f2430" stroke-width="2" stroke-dasharray="6 5"/>
+<rect x="579.2" y="62.5" width="117.9" height="23" rx="11.5" fill="#ffffff" stroke="#c9ced8" stroke-width="1.5"/>
+<text x="638.2" y="78.7" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="#1f2430">REPORT arrives</text>
+<line x1="330" y1="672" x2="1000" y2="672" stroke="#5d6577" stroke-width="1.5"/>
+<line x1="330" y1="672" x2="330" y2="680" stroke="#5d6577" stroke-width="1.5"/>
+<text x="330" y="698" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">0 ms</text>
+<line x1="464" y1="672" x2="464" y2="680" stroke="#5d6577" stroke-width="1.5"/>
+<text x="464" y="698" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">1 ms</text>
+<line x1="598" y1="672" x2="598" y2="680" stroke="#5d6577" stroke-width="1.5"/>
+<text x="598" y="698" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">2 ms</text>
+<line x1="732" y1="672" x2="732" y2="680" stroke="#5d6577" stroke-width="1.5"/>
+<text x="732" y="698" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">3 ms</text>
+<line x1="866" y1="672" x2="866" y2="680" stroke="#5d6577" stroke-width="1.5"/>
+<text x="866" y="698" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">4 ms</text>
+<line x1="1000" y1="672" x2="1000" y2="680" stroke="#5d6577" stroke-width="1.5"/>
+<text x="1000" y="698" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle" fill="#5d6577">5 ms</text>
+<text x="48" y="698" font-family="'Public Sans', 'Liberation Sans', Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start" fill="#5d6577">poll interval -i = 1 ms</text>
+</svg>

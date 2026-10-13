@@ -48,6 +48,8 @@ typedef struct {
     double t_main_end;          // when the main phase ended
     double t_final;             // when FINAL had gone to every node
     double cpu_start;
+    double t_terminate;         // when TERMINATE was sent, for the TERMINATE -> TERM_ACK delay
+    rtt_stat_t term_rtt;
 
     int    alerts;
     int    replies_with_nodes;
@@ -161,6 +163,7 @@ static void handle_report(base_t *b, const report_t *rep, int source) {
 static void handle_ack(base_t *b, const node_stats_t *s, int source) {
     b->node_stats[source] = *s;
     b->acks++;
+    rtt_add(&b->term_rtt, MPI_Wtime() - b->t_terminate);
 }
 
 // receives one message that MPI_Iprobe or MPI_Probe found (poll and block versions)
@@ -252,6 +255,7 @@ static int service(base_t *b) {
 }
 
 static void broadcast_control(base_t *b, int tag) {
+    if (tag == TAG_TERMINATE) b->t_terminate = MPI_Wtime();
     if (b->cfg->base_mode == BASE_BLOCK) {
         for (int i = 0; i < b->num_nodes; i++) {
             MPI_Send(NULL, 0, MPI_INT, i, tag, MPI_COMM_WORLD);
@@ -282,7 +286,8 @@ static void write_csv(const base_t *b, double sim_time, long total_msgs, long nb
                    "sim_time_s,main_overrun_s,shutdown_s,alerts,replies_nodes,replies_none,events,"
                    "redirects,total_msgs,nbr_msgs,nbr_rtt_n,nbr_rtt_avg_s,nbr_rtt_min_s,nbr_rtt_max_s,"
                    "report_rtt_n,report_rtt_avg_s,report_rtt_min_s,report_rtt_max_s,base_cpu_s,"
-                   "base_idle_wakeups,node_ctrl_cpu_avg_s\n");
+                   "base_idle_wakeups,node_ctrl_cpu_avg_s,term_rtt_n,term_rtt_avg_s,term_rtt_min_s,"
+                   "term_rtt_max_s\n");
     }
     fprintf(f, "%d,%d,%d,%d,%d,%d,%.3f,%.3f,%d,%u,%s,%s,", c->m, c->n, b->num_nodes, c->k,
             c->threshold, c->cycle_ms, c->duration_s, c->window_s, c->poll_us, c->seed,
@@ -290,10 +295,12 @@ static void write_csv(const base_t *b, double sim_time, long total_msgs, long nb
     fprintf(f, "%.6f,%.6f,%.6f,%d,%d,%d,%d,%d,%ld,%ld,", sim_time,
             b->t_main_end - b->t_start - c->duration_s, b->t_final - b->t_main_end, b->alerts,
             b->replies_with_nodes, b->replies_none, events, redirects, total_msgs, nbr_msgs);
-    fprintf(f, "%d,%.9f,%.9f,%.9f,%d,%.9f,%.9f,%.9f,%.6f,%ld,%.6f\n",
+    const rtt_stat_t *t = &b->term_rtt;
+    fprintf(f, "%d,%.9f,%.9f,%.9f,%d,%.9f,%.9f,%.9f,%.6f,%ld,%.6f,%d,%.9f,%.9f,%.9f\n",
             nbr_rtt->count, nbr_rtt->count ? nbr_rtt->sum / nbr_rtt->count : 0.0, nbr_rtt->min,
             nbr_rtt->max, rep_rtt->count, rep_rtt->count ? rep_rtt->sum / rep_rtt->count : 0.0,
-            rep_rtt->min, rep_rtt->max, base_cpu, b->idle_wakeups, node_cpu_avg);
+            rep_rtt->min, rep_rtt->max, base_cpu, b->idle_wakeups, node_cpu_avg,
+            t->count, t->count ? t->sum / t->count : 0.0, t->min, t->max);
     fclose(f);
 }
 
@@ -358,6 +365,9 @@ static void write_summary(base_t *b, double sim_time, double base_cpu) {
             nbr_rtt.count ? nbr_rtt.sum / nbr_rtt.count : 0.0, nbr_rtt.min, nbr_rtt.max);
     fprintf(f, "  REPORT  -> BASE_REPLY   %9d %10.6f %10.6f %10.6f\n", rep_rtt.count,
             rep_rtt.count ? rep_rtt.sum / rep_rtt.count : 0.0, rep_rtt.min, rep_rtt.max);
+    fprintf(f, "  TERMINATE -> TERM_ACK   %9d %10.6f %10.6f %10.6f\n", b->term_rtt.count,
+            b->term_rtt.count ? b->term_rtt.sum / b->term_rtt.count : 0.0, b->term_rtt.min,
+            b->term_rtt.max);
     fprintf(f, "CPU time                : base station %.3f s (%ld idle polls), "
                "node MPI thread %.3f s on average\n", base_cpu, b->idle_wakeups, node_cpu_avg);
     fprintf(f, "Per node                : node  (x,y)  events redirects reports\n");

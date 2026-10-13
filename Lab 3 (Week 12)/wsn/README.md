@@ -13,6 +13,9 @@ mpirun -np 9  ./wsn -m 1 -n 8                 # line topology (Task 3b)
 
 Always launch `m*n + 1` processes. On a laptop with fewer cores add `--oversubscribe`.
 
+On a Mac, Apple's compiler needs libomp for OpenMP: `brew install open-mpi libomp`, then `make`
+(the Makefile adds the right flags on macOS). This path has not been tested on a Mac yet.
+
 | Option | Meaning | Default |
 |---|---|---|
 | `-m`, `-n` | grid rows, columns (required) | |
@@ -43,6 +46,10 @@ Always launch `m*n + 1` processes. On a laptop with fewer cores add `--oversubsc
 | `common.c` | argument parsing, MPI derived datatypes, non-blocking send pool, CPU timers |
 | `bench/bench_versions.sh` | runs every base station / node version combination, appends CSV rows |
 | `bench/plot_versions.py` | graphs and a summary table from that CSV (needs matplotlib) |
+| `bench/configs.sh` | grid sizes, line lengths, window values and run settings for all experiments |
+| `bench/sweep_task3.sh`, `bench/plot_task3.py` | Task 3: 30 grid sizes and 30 line lengths, delay graphs |
+| `bench/sweep_window.sh`, `bench/plot_window.py` | base station window (`-w`) test and graph |
+| `caas/` | SLURM job template and submit scripts for running every experiment on CAAS |
 | `wsn.h` | message tags, message structs, statistics |
 
 ## Architecture
@@ -151,6 +158,45 @@ before each check, so use several repeats.
 `results/trial/` holds a first run made on a 4-core cloud container, heavily oversubscribed.
 It shows the method works and the general pattern; rerun on CAAS or a laptop for the slides.
 
+## Task 3 sweep and window test
+
+```sh
+bench/sweep_task3.sh                 # 30 grids + 30 lines, 3 repeats, ~35 min -> results/task3/
+python3 bench/plot_task3.py results/task3
+bench/sweep_window.sh                # 9 window values on a 4x4 grid, ~10 min -> results/window/
+python3 bench/plot_window.py results/window
+```
+
+The sizes and settings are in `bench/configs.sh`. Task 3 runs use a 100 us poll interval, so
+waiting for the next poll adds little to the measured delay (the default 1000 us would add up
+to 1 ms on each side). Three message pairs are timed: `NBR_REQ -> NBR_RESP` and
+`REPORT -> BASE_REPLY` on the node's clock, and `TERMINATE -> TERM_ACK` on the base station's.
+Each is a round trip, so one-way delay is about half.
+
+`results/trial/task3` and `results/trial/window` are short trial runs (1-2 repeats, shorter runs)
+from the 4-core cloud container, made to check the scripts.
+
+## Running on CAAS
+
+CAAS jobs are limited to 32 MPI processes and 10 minutes, and one job per user runs at a time,
+so every configuration is its own small job. On the head node, from this directory:
+
+```sh
+module load openmpi/4.1.5-gcc-11.2.0-ux65npg
+make
+caas/submit_task3.sh        # 60 jobs (grids 2x2..5x6 up to 31 nodes, lines 1x2..1x31)
+caas/submit_window.sh       # 9 jobs
+caas/submit_versions.sh     # 6 jobs
+squeue -u $USER             # wait until empty, then plot each folder:
+python3 bench/plot_task3.py results/caas/task3
+python3 bench/plot_window.py results/caas/window
+python3 bench/plot_versions.py results/caas/versions
+```
+
+`DRY_RUN=1` prints the `sbatch` commands without submitting. Jobs pack up to 16 processes per
+machine; `TASKS_PER_NODE=4` spreads them over more machines so more messages cross the network.
+The scripts were tested with stand-in `sbatch`/`srun` commands, not on CAAS itself.
+
 ## Delay measurement hooks (for Task 3)
 
 Nodes time `NBR_REQ -> NBR_RESP` and `REPORT -> BASE_REPLY` round trips on their own clock,
@@ -161,7 +207,7 @@ Round-trip times include up to one polling interval (`-i`) of waiting on each si
 ## Next steps
 
 - [x] Alternative versions for the rubric's comparison (3 base station, 2 node), benchmark script
-- [ ] Rerun the version benchmark on CAAS or a laptop for the slides
-- [ ] Task 3 sweep script: 30+ grid sizes and 30+ line lengths, CSV output, graphs
-- [ ] CAAS job scripts
-- [ ] Test different `-w` window values (spec requirement)
+- [x] Task 3 sweep script: 30 grid sizes and 30 line lengths, CSV output, graphs
+- [x] Window (`-w`) test script and graph
+- [x] CAAS job scripts
+- [ ] Run the version benchmark, Task 3 sweep and window test on a laptop and/or CAAS for the slides

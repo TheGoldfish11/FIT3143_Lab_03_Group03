@@ -1,7 +1,7 @@
 # FIT3143 Lab 3 - graphs and a table from bench_versions.sh results
 # Julia Mallard, Nam Quang Tran (Lab 03, Group 03)
 #
-# Usage: python3 bench/plot_versions.py [results/versions.csv] [output directory]
+# Usage: python3 bench/plot_versions.py [CSV file or directory of CSVs] [output directory]
 # Needs matplotlib (pip install matplotlib). Writes versions_*.png and versions_summary.csv.
 
 import csv
@@ -9,9 +9,7 @@ import os
 import statistics
 import sys
 
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+from plotstyle import load_rows, plt
 
 BASE_MODES = ['poll', 'block', 'irecv']
 NODE_MODES = ['nonblock', 'block']
@@ -30,7 +28,7 @@ METRICS = [
 
 
 def load(path):
-    rows = list(csv.DictReader(open(path)))
+    rows = load_rows([path])
     for r in rows:
         r['base_cpu_pct'] = 100 * float(r['base_cpu_s']) / float(r['sim_time_s'])
     return rows
@@ -97,7 +95,7 @@ def bar_chart(summary, col, title, unit, path, note):
 
 def main():
     src = sys.argv[1] if len(sys.argv) > 1 else 'results/versions.csv'
-    out = sys.argv[2] if len(sys.argv) > 2 else os.path.dirname(src) or '.'
+    out = sys.argv[2] if len(sys.argv) > 2 else (src if os.path.isdir(src) else os.path.dirname(src) or '.')
     rows = load(src)
     summary = summarise(rows)
     r0 = rows[0]
@@ -110,7 +108,7 @@ def main():
         bar_chart(summary, col, title, unit, os.path.join(out, f'versions_{name}.png'), note)
 
     with open(os.path.join(out, 'versions_summary.csv'), 'w', newline='') as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator='\n')
         w.writerow(['base_mode', 'node_mode', 'runs', 'report_rtt_ms', 'nbr_rtt_ms', 'base_cpu_pct',
                     'node_cpu_s', 'main_overrun_ms', 'shutdown_ms', 'alerts', 'base_idle_polls'])
         for (b, n), v in summary.items():

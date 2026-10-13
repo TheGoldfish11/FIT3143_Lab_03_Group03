@@ -15,6 +15,7 @@ can insert SVG directly).
 | `05-nearest-node-example` | Task 2 | alerts #5 and #6 from `wsn/sample_logs/base_station_3x3.log` |
 | `06-message-sequence` | Tasks 1-3 | every message type with its size, and how delay is timed |
 | `07-blocking-vs-nonblocking` | Task 1 / Q&A | why blocking receives deadlock and the polling loop does not |
+| `08-base-station-versions` | Tasks 1-2 optimisation | poll vs block vs irecv: when each notices a report, and CPU use |
 
 Colours mean the same thing in every diagram: blue = nodes and node-to-node messages,
 amber = base station and node-to-base messages, green = ports or a good outcome,

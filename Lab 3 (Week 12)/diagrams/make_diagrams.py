@@ -543,6 +543,63 @@ def blocking_vs_nonblocking():
     return s
 
 
+def base_versions():
+    s = Svg('The three base station versions on one timeline: polling versions check every poll '
+            'interval and sleep between checks, the blocking version spins inside MPI_Probe and '
+            'reacts at once but keeps a CPU core busy.')
+    x0, ms = 330, 134            # timeline starts at x0, 134 px per millisecond
+    arrive = 2.3                 # when the REPORT arrives (ms)
+
+    def X(t):
+        return round(x0 + t * ms, 1)
+
+    rows = [
+        ('poll', 'MPI_Iprobe, then sleep -i', 'Iprobe', 110,
+         ['reacts within 1 poll interval', 'idle CPU 2.6% (trial)']),
+        ('block', 'MPI_Probe waits', None, 300,
+         ['reacts at once', 'idle CPU 99%: Open MPI', 'busy-waits inside MPI_Probe',
+          'needs TIME_UP to end']),
+        ('irecv', 'MPI_Irecv posted, MPI_Testany', 'Testany', 490,
+         ['reacts within 1 poll interval', 'idle CPU 2.4% (trial)', 'report lands straight', 'in the posted buffer']),
+    ]
+    for name, sub, tick, y, notes in rows:
+        s.rect(24, y, 1232, 150, 'amber_wash', 'faint', rx=12, sw=1.5)
+        s.text(48, y + 52, name, 24, 700, 'start', mono=True)
+        s.text(48, y + 80, sub, 13, 400, 'start', 'muted', mono=True)
+        lane_y, lane_h = y + 40, 60
+        s.rect(x0, lane_y, 5 * ms, lane_h, 'white', 'faint', rx=4, sw=1)
+        if tick:
+            for t in range(5):
+                if t == 3:
+                    continue
+                s.rect(X(t), lane_y, 10, lane_h, 'amber', 'amber', rx=2, sw=1)
+            s.text(X(1) + 5, lane_y - 8, tick, 12, 400, colour='muted', mono=True)
+            s.text(X(1.5), lane_y + 36, 'sleep', 13, 400, colour='muted')
+            s.arrow([(X(arrive), lane_y + lane_h + 14), (X(3), lane_y + lane_h + 14)], 'ink')
+            s.text(X(arrive) - 6, lane_y + lane_h + 19, 'waits', 12, 400, 'end', 'muted')
+            s.rect(X(3), lane_y, X(3.45) - X(3), lane_h, 'green_bg', 'green', rx=3, sw=2)
+            s.text(X(3.225), lane_y + 36, 'reply', 12, 700, colour='green')
+        else:
+            s.rect(X(0), lane_y, X(arrive) - X(0), lane_h, 'amber_bg', 'amber', rx=3, sw=1.5)
+            s.text(X(arrive / 2), lane_y + 36, 'spinning inside MPI_Probe', 13, 700, colour='amber')
+            s.rect(X(arrive), lane_y, X(arrive + 0.45) - X(arrive), lane_h, 'green_bg', 'green', rx=3, sw=2)
+            s.text(X(arrive + 0.225), lane_y + 36, 'reply', 12, 700, colour='green')
+            s.rect(X(arrive + 0.45), lane_y, X(5) - X(arrive + 0.45), lane_h, 'amber_bg', 'amber', rx=3, sw=1.5)
+            s.text(X(3.75), lane_y + 36, 'spinning', 13, 700, colour='amber')
+        s.lines(1140, y + 75, [T(n, 14, 700 if i == 0 else 400, 'ink' if i == 0 else 'muted')
+                               for i, n in enumerate(notes)])
+
+    s.add(f'<line x1="{X(arrive)}" y1="74" x2="{X(arrive)}" y2="652" stroke="{C["ink"]}" '
+          f'stroke-width="2" stroke-dasharray="6 5"/>')
+    s.pill(X(arrive), 74, 'REPORT arrives', 13, 'ink', 700, bg='white', stroke='faint')
+    s.add(f'<line x1="{x0}" y1="672" x2="{X(5)}" y2="672" stroke="{C["muted"]}" stroke-width="1.5"/>')
+    for t in range(6):
+        s.add(f'<line x1="{X(t)}" y1="672" x2="{X(t)}" y2="680" stroke="{C["muted"]}" stroke-width="1.5"/>')
+        s.text(X(t), 698, f'{t} ms', 13, 400, colour='muted')
+    s.text(48, 698, 'poll interval -i = 1 ms', 13, 400, 'start', 'muted')
+    return s
+
+
 DIAGRAMS = [
     ('01-architecture', architecture),
     ('02-node-internals', node_internals),
@@ -551,6 +608,7 @@ DIAGRAMS = [
     ('05-nearest-node-example', search_example),
     ('06-message-sequence', sequence),
     ('07-blocking-vs-nonblocking', blocking_vs_nonblocking),
+    ('08-base-station-versions', base_versions),
 ]
 
 if __name__ == '__main__':
