@@ -1,7 +1,7 @@
 # Task 3 handover (for Julia)
 
 From Nam. Task 3 is yours: running the experiments, reading the results, answering the two
-questions and making slides 14-16. The tools are ready; no Task 3 results have been collected yet.
+questions and making slides 13-15. The tools are ready; no Task 3 results have been collected yet.
 
 ## What Task 3 asks
 
@@ -40,7 +40,7 @@ Tested on Linux and with stand-in SLURM commands. **Not yet run on a Mac or on r
    `python3 bench/plot_task3.py results/task3`. Delete `results/task3` afterwards.
 3. Full run: `bench/sweep_task3.sh` on a laptop, and/or `caas/submit_task3.sh` on CAAS.
 4. Plot, then answer a) and b) from the graphs and the printed slopes.
-5. Fill in slides 14-16 in `slides_outline.md`.
+5. Fill in slides 13-15 in `slides_outline.md`.
 
 ## Things to know before you interpret
 

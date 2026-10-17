@@ -2,7 +2,7 @@
 
 Julia Mallard, Nam Quang Tran - FIT3143 Lab 03, Group 03
 
-About 15 content slides for 7 minutes, so roughly 25-30 s each. Aim for Task 1 ≈ 2 min,
+About 14 content slides for 7 minutes, so roughly 25-30 s each. Aim for Task 1 ≈ 2 min,
 Task 2 + versions ≈ 2 min, Task 3 ≈ 2 min, wrap-up ≈ 1 min. Images are in
 `diagrams/png/` and `wsn/results/`. Replace the trial graphs with your laptop/CAAS ones.
 
@@ -61,60 +61,54 @@ while not FINAL:
 
 ## 8. Task 2: Base Station  *(section slide)*
 
-## 9. Base station
-*Image: `04-base-station.png` (top half)*
-- One MPI process, one thread
+## 9. Base station and shutdown
+*Image: `04-base-station.png` (whole diagram)*
+- One MPI process, one thread; logs every alert and a summary
 - All of R's neighbours reported within w s → "no nodes available nearby"
 - Otherwise search outward from 2 hops → return **all** nodes at the closest distance
-- Logs every alert, then a summary: sim time, alerts, messages by type, round trips
+- Shutdown: `TERMINATE` → `TERM_ACK` from every node → `FINAL` → nothing left unreceived
 
 ## 10. Nearest-node search: real alerts
 *Image: `05-nearest-node-example.png`*
 - Alert #5: Node 0 → node 2 (nodes 4 and 6 had just reported)
 - Alert #6: Node 3 → none nearby (all its neighbours had reported)
 
-## 11. Graceful shutdown
-*Image: `04-base-station.png` (bottom strip)*
-- `TERMINATE` → nodes finish their round → `TERM_ACK`
-- All acks in → `FINAL` → stop threads, finish sends, free memory, `MPI_Finalize`
-- MPI keeps per-pair message order → nothing left unreceived
-
-## 12. Blocking vs non-blocking versions
+## 11. Blocking vs non-blocking versions
 *Image: `08-base-station-versions.png`*
 - Base station: **poll** (`Iprobe` + sleep), **block** (`Probe`), **irecv** (`Irecv` + `Testany`)
 - Nodes: **non-blocking**, **blocking** (still answers requests while waiting)
 - Blocking base can't watch the clock → node 0 sends `TIME_UP`
 
-## 13. Versions: results
+## 12. Versions: results
 *Images: `versions_report_rtt.png`, `versions_base_cpu.png`*
 - Blocking is fastest: 0.08 ms report round trip vs ~3 ms
 - But Open MPI busy-waits: 99% CPU vs ~2.5%
 - Default = poll: latency tunable with `-i`, CPU stays free
 
-## 14. Task 3: Analysis  *(section slide; slides 14-16 are Julia's, see HANDOVER_task3.md)*
+## 13. Task 3: Analysis  *(section slide; slides 13-15 are Julia's, see HANDOVER_task3.md)*
 
-## 15. Method
+## 14. Method
 - Round trips timed on one clock (no clock sync): neighbour, report, terminate
 - 30 grid sizes (2×2 → 5×6) and 30 lines (1×2 → 1×31), 3 repeats each
 - Poll interval 100 µs, so polling barely adds to the delay
 - Run on [laptop / CAAS]
 
-## 16. Delay vs grid size and line length
+## 15. Delay vs grid size and line length
 *Image: `task3_grid_vs_line.png`*
 - *Julia: answer a) and b) here from the graphs (2-3 bullets)*
 
-## 17. Window test
+## 16. Window test
 *Image: `window_replies.png`*
 - *To fill in after running `bench/sweep_window.sh`: how w changes the split of replies*
 
-## 18. Issues, limitations & future work
+## 17. Issues, limitations & future work
 - Oversubscribed runs: CPU contention inflates delay (CAAS is more realistic)
 - One base station = bottleneck and single point of failure → several base stations
 - Base station only knows what reports say → candidates can be stale
 - Polling trades latency for CPU; blocking busy-waits
 - Future: persistent requests, `MPI_THREAD_MULTIPLE`, real EV arrival data
 
-## 19. Q&A
+## 18. Q&A
 Any questions?
 
 ---
